@@ -16,6 +16,22 @@ services:
     networks:
       - app_network
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+      - PMA_USER=${PMA_USER}
+      - PMA_PASSWORD=${PMA_PASSWORD}
+    ports:
+      - "8000:80"
+    networks:
+      - app_network
+
 # Define a network, which allows containers to communicate
 # with each other, by using their container name as a hostname
 networks:
