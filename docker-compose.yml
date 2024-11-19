@@ -1,0 +1,26 @@
+services:
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: ./Dockerfile
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      TZ: Asia/Tokyo
+    volumes:
+        - db-data:/var/lib/mysql
+    networks:
+      - app_network
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db-data:
