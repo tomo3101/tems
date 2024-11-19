@@ -45,6 +45,19 @@ services:
     networks:
       - app_network
 
+  api:
+    container_name: api
+    build:
+      context: ./node
+      dockerfile: ./apps/api/Dockerfile
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 3001:3001
+    networks:
+      - app_network
+
 # Define a network, which allows containers to communicate
 # with each other, by using their container name as a hostname
 networks:
