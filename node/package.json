@@ -1,0 +1,25 @@
+{
+  "name": "node-with-docker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "turbo": "^2.3.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": "use pnpm",
+    "yarn": "use pnpm",
+    "pnpm": ">=9.13.2"
+  },
+  "packageManager": "pnpm@9.13.2"
+}
