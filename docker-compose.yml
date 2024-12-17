@@ -1,0 +1,68 @@
+services:
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: ./Dockerfile
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      TZ: Asia/Tokyo
+    volumes:
+        - db-data:/var/lib/mysql
+    networks:
+      - app_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+      - PMA_USER=${PMA_USER}
+      - PMA_PASSWORD=${PMA_PASSWORD}
+    ports:
+      - "8000:80"
+    networks:
+      - app_network
+
+  web:
+    container_name: web
+    build:
+      context: ./node
+      dockerfile: ./apps/web/Dockerfile
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 3000:3000
+    networks:
+      - app_network
+
+  api:
+    container_name: api
+    build:
+      context: ./node
+      dockerfile: ./apps/api/Dockerfile
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 3001:3001
+    networks:
+      - app_network
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db-data:
