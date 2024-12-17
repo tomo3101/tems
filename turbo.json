@@ -19,7 +19,7 @@
       "cache": false,
       "persistent": true
     },
-    "clean": {
+    "push": {
       "cache": false
     }
   }
