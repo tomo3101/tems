@@ -9,7 +9,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "push": "turbo run push"
+    "push": "turbo run push",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
     "lefthook": "^1.9.3",
