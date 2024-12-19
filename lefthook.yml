@@ -7,18 +7,12 @@ pre-commit:
   parallel: true
   commands:
     web:
-      root: node/apps/web/
+      root: apps/web/
       glob: "*.{js,ts,jsx,tsx}"
       run: pnpm prettier --write {staged_files} && pnpm eslint {staged_files} --max-warnings 0
       stage_fixed: true
     api:
-      root: node/apps/api/
+      root: apps/api/
       glob: "*.{js,ts,jsx,tsx}"
       run: pnpm prettier --write {staged_files} && pnpm eslint {staged_files} --max-warnings 0
       stage_fixed: true
-    ui:
-      root: node/packages/ui/
-      glob: "*.{js,ts,jsx,tsx}"
-      run: pnpm prettier --write {staged_files} && pnpm eslint {staged_files} --max-warnings 0
-      stage_fixed: true
-
