@@ -12,6 +12,7 @@
     "push": "turbo run push"
   },
   "devDependencies": {
+    "lefthook": "^1.9.3",
     "prettier": "^3.2.5",
     "turbo": "^2.3.0"
   },
