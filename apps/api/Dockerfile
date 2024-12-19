@@ -54,4 +54,4 @@ COPY --from=installer --chown=hono:nodejs /app/apps/api/package.json ./apps/api/
 
 USER hono
 
-CMD ["node", "apps/api/dist/index.js"]
+CMD ["node", "apps/api/dist/src/index.js"]

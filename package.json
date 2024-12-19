@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "clean": "turbo run clean",
+    "clean": "git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "push": "turbo run push"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

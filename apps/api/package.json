@@ -7,7 +7,8 @@
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "lint": "eslint \"src/**/*.ts*\" --max-warnings 0",
-    "start": "node ./dist/index.ts"
+    "start": "node ./dist/index.ts",
+    "push": "tsc && drizzle-kit push"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
