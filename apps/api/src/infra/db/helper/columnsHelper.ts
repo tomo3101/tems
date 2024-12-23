@@ -6,8 +6,7 @@ export const datetimes = {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updated_at: datetime()
-    .default(sql`CURRENT_TIMESTAMP`)
-    .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
+    .default(sql`CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`)
     .notNull(),
 };
 
