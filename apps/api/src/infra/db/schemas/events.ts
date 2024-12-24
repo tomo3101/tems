@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { datetime, int, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
-import { datetimes } from '../helper/columnsHelper.js';
+import { datetimes } from '../helpers/columnsHelper.js';
 import { admins } from './admins.js';
 import { reservations } from './reservations.js';
 

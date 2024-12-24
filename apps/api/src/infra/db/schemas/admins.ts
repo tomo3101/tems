@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { int, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
-import { datetimes } from '../helper/columnsHelper.js';
+import { datetimes } from '../helpers/columnsHelper.js';
 import { events } from './events.js';
 
 export const admins = mysqlTable('admins', {
