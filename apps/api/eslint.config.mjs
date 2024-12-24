@@ -1,10 +1,9 @@
-import baseConfig from '@hono/eslint-config';
+import eslint from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import tseslint from 'typescript-eslint';
 
-export default [
-  ...baseConfig,
-  {
-    rules: {
-      semi: ['error', 'always'],
-    },
-  },
-];
+export default tseslint.config(
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+  eslintConfigPrettier,
+);

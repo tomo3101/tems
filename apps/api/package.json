@@ -18,11 +18,12 @@
     "mysql2": "^3.11.5"
   },
   "devDependencies": {
-    "@hono/eslint-config": "^1.0.2",
+    "@eslint/js": "^9",
     "@types/node": "^20.11.17",
     "drizzle-kit": "^0.30.1",
     "eslint": "^9",
     "tsx": "^4.19.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.18.1"
   }
 }
