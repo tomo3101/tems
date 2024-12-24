@@ -5,7 +5,7 @@ import {
   mysqlTable,
   varchar,
 } from 'drizzle-orm/mysql-core';
-import { created_at } from '../helper/columnsHelper.js';
+import { created_at } from '../helpers/columnsHelper.js';
 
 export const temporaryMembers = mysqlTable('temporary_members', {
   temporary_member_id: int().autoincrement().primaryKey(),

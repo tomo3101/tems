@@ -6,7 +6,7 @@ import {
   mysqlTable,
   varchar,
 } from 'drizzle-orm/mysql-core';
-import { created_at } from '../helper/columnsHelper.js';
+import { created_at } from '../helpers/columnsHelper.js';
 import { events } from './events.js';
 import { members } from './members.js';
 
