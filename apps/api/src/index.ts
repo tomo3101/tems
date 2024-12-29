@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import admins from './application/routes/adminRoute.js';
+import login from './application/routes/loginRoute.js';
 import members from './application/routes/memberRoute.js';
 
 const app = new OpenAPIHono();
@@ -20,6 +21,7 @@ api.openAPIRegistry.registerComponent('securitySchemes', 'JWT', {
 
 api.route('/members', members);
 api.route('/admins', admins);
+api.route('/login', login);
 
 api.doc('/docs', {
   openapi: '3.0.0',
