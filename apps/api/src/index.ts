@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
+import admins from './application/routes/adminRoute.js';
 
 const app = new OpenAPIHono();
 const api = app.basePath('/api/v1');
@@ -15,6 +16,8 @@ api.openAPIRegistry.registerComponent('securitySchemes', 'JWT', {
   scheme: 'bearer',
   description: 'JWT Access Token',
 });
+
+api.route('/admins', admins);
 
 api.doc('/docs', {
   openapi: '3.0.0',
