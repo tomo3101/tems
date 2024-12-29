@@ -4,6 +4,7 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import admins from './application/routes/adminRoute.js';
 import login from './application/routes/loginRoute.js';
 import members from './application/routes/memberRoute.js';
+import refresh from './application/routes/refreshRoute.js';
 
 const app = new OpenAPIHono();
 const api = app.basePath('/api/v1');
@@ -22,6 +23,7 @@ api.openAPIRegistry.registerComponent('securitySchemes', 'JWT', {
 api.route('/members', members);
 api.route('/admins', admins);
 api.route('/login', login);
+api.route('/refresh', refresh);
 
 api.doc('/docs', {
   openapi: '3.0.0',
