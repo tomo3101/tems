@@ -9,6 +9,13 @@ app.get('/', (c) => {
   return c.text('Hello Hono!');
 });
 
+api.openAPIRegistry.registerComponent('securitySchemes', 'JWT', {
+  type: 'http',
+  in: 'header',
+  scheme: 'bearer',
+  description: 'JWT Access Token',
+});
+
 api.doc('/docs', {
   openapi: '3.0.0',
   info: {
