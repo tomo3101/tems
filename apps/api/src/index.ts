@@ -3,6 +3,7 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import admins from './application/routes/adminRoute.js';
 import login from './application/routes/loginRoute.js';
+import logout from './application/routes/logoutRoute.js';
 import members from './application/routes/memberRoute.js';
 import refresh from './application/routes/refreshRoute.js';
 
@@ -24,6 +25,7 @@ api.route('/members', members);
 api.route('/admins', admins);
 api.route('/login', login);
 api.route('/refresh', refresh);
+api.route('/logout', logout);
 
 api.doc('/docs', {
   openapi: '3.0.0',
