@@ -1,11 +1,49 @@
 import type { RouteHandler } from '@hono/zod-openapi';
 import { compare } from 'bcrypt';
+import type { Context } from 'hono';
 import { serialize } from 'hono/utils/cookie';
 import { AdminRepository } from '../../infra/repositories/adminRepository.js';
 import { MemberRepository } from '../../infra/repositories/memberRepository.js';
 import { TokenRepository } from '../../infra/repositories/tokenRepository.js';
 import { createAccessToken, createRefreshToken } from '../../utils/jwt.js';
 import type { postLoginAdminRoute } from '../routes/loginRoute.js';
+
+const accessTokenExp = process.env.ACCESS_TOKEN_EXP;
+const refreshTokenExp = process.env.REFRESH_TOKEN_EXP;
+
+if (accessTokenExp === undefined) {
+  throw new Error('ACCESS_TOKEN_EXP is not defined');
+}
+
+if (refreshTokenExp === undefined) {
+  throw new Error('REFRESH_TOKEN_EXP is not defined');
+}
+
+const setAccessTokenCookie = (c: Context, token: string) => {
+  c.res.headers.append(
+    'Set-Cookie',
+    serialize('accessToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: parseInt(accessTokenExp),
+      path: '/api/v1',
+    }),
+  );
+};
+
+const setRefreshTokenCookie = (c: Context, token: string) => {
+  c.res.headers.append(
+    'Set-Cookie',
+    serialize('refreshToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: parseInt(refreshTokenExp),
+      path: '/api/v1',
+    }),
+  );
+};
 
 // ログイン用ハンドラ
 export const postLoginHandler: RouteHandler<
@@ -43,27 +81,8 @@ export const postLoginHandler: RouteHandler<
       const tokenRepository = new TokenRepository();
       await tokenRepository.create(member.member_id, 'member', refreshToken);
 
-      c.res.headers.append(
-        'Set-Cookie',
-        serialize('accessToken', accessToken.token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 60 * 15, // 15 minutes
-          path: '/api/v1',
-        }),
-      );
-
-      c.res.headers.append(
-        'Set-Cookie',
-        serialize('refreshToken', refreshToken.token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 60 * 60 * 24 * 1, // 1 days
-          path: '/api/v1',
-        }),
-      );
+      setAccessTokenCookie(c, accessToken.token);
+      setRefreshTokenCookie(c, refreshToken.token);
 
       return c.json(
         {
@@ -115,27 +134,8 @@ export const postLoginHandler: RouteHandler<
       const tokenRepository = new TokenRepository();
       await tokenRepository.create(admin.admin_id, 'admin', refreshToken);
 
-      c.res.headers.append(
-        'Set-Cookie',
-        serialize('accessToken', accessToken.token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 60 * 15, // 15 minutes
-          path: '/api/v1',
-        }),
-      );
-
-      c.res.headers.append(
-        'Set-Cookie',
-        serialize('refreshToken', refreshToken.token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 60 * 60 * 24 * 1, // 1 days
-          path: '/api/v1',
-        }),
-      );
+      setAccessTokenCookie(c, accessToken.token);
+      setRefreshTokenCookie(c, refreshToken.token);
 
       return c.json(
         {
