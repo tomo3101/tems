@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import type { Context, Next } from 'hono';
 import { jwt } from 'hono/jwt';
+import { ReservationRepository } from '../../infra/repositories/reservationRepository.js';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
@@ -30,4 +31,20 @@ export const userAuthMiddleware = async (c: Context, next: Next) => {
   } else {
     return c.json({ message: 'Forbidden' }, 403);
   }
+};
+
+export const reservationAuthMiddleware = async (c: Context, next: Next) => {
+  const { role, user_id } = c.get('jwtPayload');
+  const reservationId = Number(c.req.param('reservation_id'));
+
+  if (role === 'member') {
+    const reservationRepository = new ReservationRepository();
+    const reservation = await reservationRepository.findById(reservationId);
+
+    if (reservation?.member_id !== user_id) {
+      return c.json({ message: 'Forbidden' }, 403);
+    }
+  }
+
+  await next();
 };
