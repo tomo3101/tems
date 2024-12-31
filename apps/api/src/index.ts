@@ -7,6 +7,7 @@ import login from './application/routes/loginRoute.js';
 import logout from './application/routes/logoutRoute.js';
 import members from './application/routes/memberRoute.js';
 import refresh from './application/routes/refreshRoute.js';
+import reservations from './application/routes/reservationRoute.js';
 
 const app = new OpenAPIHono();
 const api = app.basePath('/api/v1');
@@ -25,6 +26,7 @@ api.openAPIRegistry.registerComponent('securitySchemes', 'JWT', {
 api.route('/members', members);
 api.route('/admins', admins);
 api.route('/events', events);
+api.route('/reservations', reservations);
 api.route('/login', login);
 api.route('/refresh', refresh);
 api.route('/logout', logout);
