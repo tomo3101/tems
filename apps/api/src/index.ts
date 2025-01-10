@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
+import { cors } from 'hono/cors';
 import admins from './application/routes/adminRoute.js';
 import events from './application/routes/eventRoute.js';
 import login from './application/routes/loginRoute.js';
@@ -22,6 +23,18 @@ api.openAPIRegistry.registerComponent('securitySchemes', 'JWT', {
   scheme: 'bearer',
   description: 'JWT Access Token',
 });
+
+api.use(
+  '*',
+  cors({
+    origin: 'http://localhost:3000',
+    allowHeaders: ['X-Custom-Header', 'Upgrade-Insecure-Requests'],
+    allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
+    exposeHeaders: ['Content-Length', 'X-Kuma-Revision', 'Content-Type'],
+    maxAge: 600,
+    credentials: true,
+  }),
+);
 
 export const routes = api
   .route('/members', members)
