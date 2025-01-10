@@ -13,6 +13,11 @@ import reservations from './application/routes/reservationRoute.js';
 const app = new OpenAPIHono();
 const api = app.basePath('/api/v1');
 
+app.use('*', async (c, next) => {
+  await next();
+  console.log(`${c.req.method} ${c.req.url} ${c.res.status}`);
+});
+
 app.get('/', (c) => {
   return c.text('Hello Hono!');
 });
