@@ -3,6 +3,14 @@
   "version": "0.8.0",
   "private": true,
   "type": "module",
+  "exports": {
+    "./hc": {
+      "import": {
+        "import": "./dist/src/hc.js",
+        "types": "./dist/src/hc.d.ts"
+      }
+    }
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
