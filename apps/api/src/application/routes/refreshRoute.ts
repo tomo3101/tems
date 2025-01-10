@@ -64,6 +64,6 @@ export const postRefreshRoute = createRoute({
 const app = new OpenAPIHono();
 
 // ルートを登録
-app.openapi(postRefreshRoute, postRefreshHandler);
+const routes = app.openapi(postRefreshRoute, postRefreshHandler);
 
-export default app;
+export default routes;

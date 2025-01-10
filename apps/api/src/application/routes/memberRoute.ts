@@ -341,10 +341,11 @@ export const deleteMembersRoute = createRoute({
 const app = new OpenAPIHono();
 
 // ルートを登録
-app.openapi(getMembersRoute, getMembersHandler);
-app.openapi(getMembersByIdRoute, getMembersByIdHandler);
-app.openapi(postMembersRoute, postMembersHandler);
-app.openapi(putMembersRoute, putMembersHandler);
-app.openapi(deleteMembersRoute, deleteMembersHandler);
+const routes = app
+  .openapi(getMembersRoute, getMembersHandler)
+  .openapi(getMembersByIdRoute, getMembersByIdHandler)
+  .openapi(postMembersRoute, postMembersHandler)
+  .openapi(putMembersRoute, putMembersHandler)
+  .openapi(deleteMembersRoute, deleteMembersHandler);
 
-export default app;
+export default routes;

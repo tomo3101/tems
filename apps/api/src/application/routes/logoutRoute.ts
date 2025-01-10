@@ -64,6 +64,6 @@ export const deleteLogoutRoute = createRoute({
 const app = new OpenAPIHono();
 
 // ルートを登録
-app.openapi(deleteLogoutRoute, deleteLogoutHandler);
+const routes = app.openapi(deleteLogoutRoute, deleteLogoutHandler);
 
-export default app;
+export default routes;

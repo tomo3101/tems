@@ -402,11 +402,12 @@ export const getReservationsByMemberRoute = createRoute({
 
 const app = new OpenAPIHono();
 
-app.openapi(getReservationsRoute, getReservationsHandler);
-app.openapi(postReservationsRoute, postReservationsHandler);
-app.openapi(getReservationsByIdRoute, getReservationsByIdHandler);
-app.openapi(putReservationsRoute, putReservationsHandler);
-app.openapi(deleteReservationsRoute, deleteReservationsHandler);
-app.openapi(getReservationsByMemberRoute, getReservationsByMemberHandler);
+const routes = app
+  .openapi(getReservationsRoute, getReservationsHandler)
+  .openapi(postReservationsRoute, postReservationsHandler)
+  .openapi(getReservationsByIdRoute, getReservationsByIdHandler)
+  .openapi(putReservationsRoute, putReservationsHandler)
+  .openapi(deleteReservationsRoute, deleteReservationsHandler)
+  .openapi(getReservationsByMemberRoute, getReservationsByMemberHandler);
 
-export default app;
+export default routes;
