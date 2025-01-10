@@ -339,10 +339,11 @@ const app = new OpenAPIHono();
 app.use('*', jwtAuthMiddleware, adminAuthMiddleware);
 
 // ルートを登録
-app.openapi(getEventsRoute, getEventsHandler);
-app.openapi(postEventsRoute, postEventsHandler);
-app.openapi(getEventsByIdRoute, getEventsByIdHandler);
-app.openapi(putEventsRoute, putEventsHandler);
-app.openapi(deleteEventsRoute, deleteEventsHandler);
+const routes = app
+  .openapi(getEventsRoute, getEventsHandler)
+  .openapi(postEventsRoute, postEventsHandler)
+  .openapi(getEventsByIdRoute, getEventsByIdHandler)
+  .openapi(putEventsRoute, putEventsHandler)
+  .openapi(deleteEventsRoute, deleteEventsHandler);
 
-export default app;
+export default routes;

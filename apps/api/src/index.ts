@@ -23,13 +23,14 @@ api.openAPIRegistry.registerComponent('securitySchemes', 'JWT', {
   description: 'JWT Access Token',
 });
 
-api.route('/members', members);
-api.route('/admins', admins);
-api.route('/events', events);
-api.route('/reservations', reservations);
-api.route('/login', login);
-api.route('/refresh', refresh);
-api.route('/logout', logout);
+export const routes = api
+  .route('/members', members)
+  .route('/admins', admins)
+  .route('/events', events)
+  .route('/reservations', reservations)
+  .route('/login', login)
+  .route('/refresh', refresh)
+  .route('/logout', logout);
 
 api.doc('/docs', {
   openapi: '3.0.0',

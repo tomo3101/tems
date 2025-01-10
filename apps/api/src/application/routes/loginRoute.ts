@@ -73,6 +73,6 @@ export const postLoginAdminRoute = createRoute({
 const app = new OpenAPIHono();
 
 // ルートを登録
-app.openapi(postLoginAdminRoute, postLoginHandler);
+const routes = app.openapi(postLoginAdminRoute, postLoginHandler);
 
-export default app;
+export default routes;
