@@ -35,6 +35,7 @@ export const getEventsRoute = createRoute({
     query: getEventsQuerySchema,
   },
   security: [{ JWT: [] }],
+  middleware: [jwtAuthMiddleware] as const,
   responses: {
     200: {
       description: 'Success',
@@ -89,6 +90,7 @@ export const getEventsByIdRoute = createRoute({
     params: eventIdParamsSchema,
   },
   security: [{ JWT: [] }],
+  middleware: [jwtAuthMiddleware] as const,
   responses: {
     200: {
       description: 'Success',
@@ -157,6 +159,7 @@ export const postEventsRoute = createRoute({
     },
   },
   security: [{ JWT: [] }],
+  middleware: [jwtAuthMiddleware, adminAuthMiddleware] as const,
   responses: {
     201: {
       description: 'Created',
@@ -218,6 +221,7 @@ export const putEventsRoute = createRoute({
     },
   },
   security: [{ JWT: [] }],
+  middleware: [jwtAuthMiddleware, adminAuthMiddleware] as const,
   responses: {
     200: {
       description: 'Success',
@@ -280,6 +284,7 @@ export const deleteEventsRoute = createRoute({
     params: eventIdParamsSchema,
   },
   security: [{ JWT: [] }],
+  middleware: [jwtAuthMiddleware, adminAuthMiddleware] as const,
   responses: {
     200: {
       description: 'Success',
@@ -334,9 +339,6 @@ export const deleteEventsRoute = createRoute({
 });
 
 const app = new OpenAPIHono();
-
-// ミドルウェアを登録
-app.use('*', jwtAuthMiddleware, adminAuthMiddleware);
 
 // ルートを登録
 const routes = app
