@@ -9,6 +9,12 @@ export const eventSchema = z.object({
   start_time: z.string().time().openapi({ example: '12:00:00' }),
   end_time: z.string().time().openapi({ example: '13:00:00' }),
   capacity: z.number().int().positive().openapi({ example: 20 }),
+  reserved_count: z
+    .number()
+    .int()
+    .nonnegative()
+    .optional()
+    .openapi({ example: 10 }),
   created_at: z
     .string()
     .datetime()
