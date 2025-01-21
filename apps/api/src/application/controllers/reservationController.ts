@@ -118,6 +118,11 @@ export const postReservationsHandler: RouteHandler<
     );
   } catch (e: unknown) {
     console.log(e);
+
+    if (e instanceof Error && e.message === 'capacity is not enough') {
+      return c.json({ message: 'Conflict', error: e.message }, 409);
+    }
+
     return c.json(
       {
         message: 'Internal Server Error',
