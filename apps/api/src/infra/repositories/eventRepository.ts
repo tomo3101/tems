@@ -1,12 +1,22 @@
 import { z } from '@hono/zod-openapi';
-import { and, eq, gte, like, lte, type SQLWrapper } from 'drizzle-orm';
+import {
+  and,
+  eq,
+  getTableColumns,
+  gte,
+  like,
+  lte,
+  type SQLWrapper,
+} from 'drizzle-orm';
 import type {
   getEventsQuerySchema,
   postEventsBodySchema,
   putEventsBodySchema,
 } from '../../application/schemas/eventSchema.js';
 import { db } from '../db/helpers/connecter.js';
+import { withLimit } from '../db/helpers/dynamicBuilder.js';
 import { events } from '../db/schemas/events.js';
+import { reservations } from '../db/schemas/reservations.js';
 
 type getEventsQuerySchema = z.infer<typeof getEventsQuerySchema>;
 type postEventsBodySchema = z.infer<typeof postEventsBodySchema>;
@@ -36,16 +46,34 @@ export class EventRepository {
       filters.push(lte(events.end_time, query.end_time));
     }
 
-    return db.query.events.findMany({
-      where: and(...filters),
-      limit: query.limit,
-    });
+    const dynamicQuery = db
+      .select({
+        ...getTableColumns(events),
+        reserved_count: db.$count(
+          reservations,
+          eq(reservations.event_id, events.event_id),
+        ),
+      })
+      .from(events)
+      .where(and(...filters))
+      .$dynamic();
+
+    return withLimit(dynamicQuery, query.limit);
   }
 
   async findById(id: number) {
-    return db.query.events.findFirst({
-      where: eq(events.event_id, id),
-    });
+    return db
+      .select({
+        ...getTableColumns(events),
+        reserved_count: db.$count(
+          reservations,
+          eq(reservations.event_id, events.event_id),
+        ),
+      })
+      .from(events)
+      .where(eq(events.event_id, id))
+      .limit(1)
+      .then((rows) => rows[0]);
   }
 
   async create(adminId: number, event: postEventsBodySchema) {
