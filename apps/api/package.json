@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "type": "module",
   "exports": {
@@ -15,7 +15,7 @@
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "lint": "eslint \"src/**/*.ts*\" --max-warnings 0",
-    "start": "node ./dist/index.ts",
+    "start": "node ./dist/src/index.js",
     "push": "tsc && drizzle-kit push"
   },
   "dependencies": {

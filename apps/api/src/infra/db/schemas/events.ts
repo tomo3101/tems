@@ -18,6 +18,9 @@ export const events = mysqlTable('events', {
 });
 
 export const eventsRelations = relations(events, ({ one, many }) => ({
-  admins: one(admins),
+  admins: one(admins, {
+    fields: [events.admin_id],
+    references: [admins.admin_id],
+  }),
   reservations: many(reservations),
 }));
