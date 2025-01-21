@@ -15,6 +15,7 @@ import {
 } from '../middlewares/jwtAuthMiddleware.js';
 import {
   badRequestErrorSchema,
+  conflictErrorSchema,
   forbiddenErrorSchema,
   internalServerErrorSchema,
   notFoundErrorSchema,
@@ -196,6 +197,14 @@ export const postReservationsRoute = createRoute({
       content: {
         'application/json': {
           schema: forbiddenErrorSchema,
+        },
+      },
+    },
+    409: {
+      description: 'Conflict',
+      content: {
+        'application/json': {
+          schema: conflictErrorSchema,
         },
       },
     },
