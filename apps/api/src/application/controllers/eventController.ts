@@ -32,6 +32,7 @@ export const getEventsHandler: RouteHandler<typeof getEventsRoute> = async (
         start_time: event.start_time,
         end_time: event.end_time,
         capacity: event.capacity,
+        reserved_count: event.reserved_count,
         created_at: event.created_at.toISOString(),
         updated_at: event.updated_at.toISOString(),
       };
@@ -73,6 +74,7 @@ export const getEventsByIdHandler: RouteHandler<
         start_time: event.start_time,
         end_time: event.end_time,
         capacity: event.capacity,
+        reserved_count: event.reserved_count,
         created_at: event.created_at.toISOString(),
         updated_at: event.updated_at.toISOString(),
       },
