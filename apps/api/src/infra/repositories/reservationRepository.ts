@@ -8,6 +8,7 @@ import type {
   putReservationsBodySchema,
 } from '../../application/schemas/reservationSchema.js';
 import { db } from '../db/helpers/connecter.js';
+import { events } from '../db/schemas/events.js';
 import { reservations } from '../db/schemas/reservations.js';
 
 type getReservationsQuerySchema = z.infer<typeof getReservationsQuerySchema>;
@@ -88,27 +89,50 @@ export class ReservationRepository {
   }
 
   async create(memberId: number, reservation: postReservationsBodySchema) {
-    const qrCodeValue = `${reservation.event_id}-${memberId}-${reservation.number_of_people}-${new Date().toISOString()}`;
-    console.log(qrCodeValue);
-    const qrCodeHash = createHash('sha256').update(qrCodeValue).digest('hex');
+    return await db.transaction(async (tx) => {
+      const event = await tx
+        .select({
+          capacity: events.capacity,
+          reserved_count: db.$count(
+            reservations,
+            eq(reservations.event_id, events.event_id),
+          ),
+        })
+        .from(events)
+        .where(eq(events.event_id, reservation.event_id))
+        .limit(1)
+        .then((rows) => rows[0]);
 
-    const createdId = await db
-      .insert(reservations)
-      .values({
-        event_id: reservation.event_id,
-        member_id: memberId,
-        number_of_people: reservation.number_of_people,
-        qr_code_hash: qrCodeHash,
-      })
-      .$returningId();
+      if (
+        event.capacity <
+        event.reserved_count + reservation.number_of_people
+      ) {
+        throw new Error('capacity is not enough');
+      }
 
-    const createdReservation = await this.findById(createdId[0].reservation_id);
+      const qrCodeValue = `${reservation.event_id}-${memberId}-${reservation.number_of_people}-${new Date().toISOString()}`;
+      const qrCodeHash = createHash('sha256').update(qrCodeValue).digest('hex');
 
-    if (createdReservation === undefined) {
-      throw new Error('failed to create reservation');
-    }
+      const createdId = await tx
+        .insert(reservations)
+        .values({
+          event_id: reservation.event_id,
+          member_id: memberId,
+          number_of_people: reservation.number_of_people,
+          qr_code_hash: qrCodeHash,
+        })
+        .$returningId();
 
-    return createdReservation;
+      const createdReservation = await tx.query.reservations.findFirst({
+        where: eq(reservations.reservation_id, createdId[0].reservation_id),
+      });
+
+      if (createdReservation === undefined) {
+        throw new Error('failed to create reservation');
+      }
+
+      return createdReservation;
+    });
   }
 
   async update(id: number, reservation: putReservationsBodySchema) {
