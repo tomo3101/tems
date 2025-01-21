@@ -20,6 +20,11 @@ export const notFoundErrorSchema = z.object({
   error: z.string().optional().openapi({ example: 'Error message' }),
 });
 
+export const conflictErrorSchema = z.object({
+  message: z.string().openapi({ example: 'Conflict' }),
+  error: z.string().optional().openapi({ example: 'Error message' }),
+});
+
 export const internalServerErrorSchema = z.object({
   message: z.string().openapi({ example: 'Internal Server Error' }),
   error: z.string().optional().openapi({ example: 'Error message' }),
