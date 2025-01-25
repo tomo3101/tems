@@ -10,9 +10,12 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
+      height: {
+        header: '4rem',
+        main: 'calc(100svh - 4rem)',
+      },
+      minHeight: {
+        main: 'calc(100svh - 4rem)',
       },
     },
   },
