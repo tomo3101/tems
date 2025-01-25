@@ -9,7 +9,15 @@ export default {
     '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        header: '4rem',
+        main: 'calc(100svh - 4rem)',
+      },
+      minHeight: {
+        main: 'calc(100svh - 4rem)',
+      },
+    },
   },
   darkMode: 'class',
   plugins: [heroui()],
