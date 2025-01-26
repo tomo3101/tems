@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@react-types/shared": "^3.27.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
