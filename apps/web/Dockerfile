@@ -43,6 +43,8 @@ RUN pnpm turbo build --filter=web...
 FROM base AS runner
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
