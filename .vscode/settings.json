@@ -4,5 +4,7 @@
   },
   "editor.quickSuggestions": {
     "strings": "on"
-  }
+  },
+  "eslint.useFlatConfig": true,
+  "eslint.workingDirectories": [{ "mode": "auto" }]
 }
