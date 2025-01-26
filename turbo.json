@@ -8,6 +8,9 @@
       "dependsOn": ["^build"],
       "env": ["NEXT_PUBLIC_API_HOST"]
     },
+    "start": {
+      "dependsOn": ["build"]
+    },
     "test": {
       "outputs": ["coverage/**"],
       "dependsOn": []

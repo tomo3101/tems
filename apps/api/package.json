@@ -12,11 +12,12 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "pnpm remove-dist && tsc",
     "dev": "tsx watch src/index.ts",
     "lint": "eslint \"src/**/*.ts*\" --max-warnings 0",
     "start": "node ./dist/src/index.js",
-    "push": "tsc && drizzle-kit push"
+    "push": "pnpm build && drizzle-kit push",
+    "remove-dist": "rm -rf dist"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
