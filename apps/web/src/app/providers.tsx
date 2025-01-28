@@ -1,6 +1,7 @@
 'use client';
 
 import { HeroUIProvider } from '@heroui/react';
+import { SessionProvider } from 'next-auth/react';
 import type { ThemeProviderProps } from 'next-themes';
 import { ThemeProvider as NextThemasProvider } from 'next-themes';
 import { useRouter } from 'next/navigation';
@@ -19,9 +20,13 @@ declare module '@react-types/shared' {
 }
 
 export function Providers({ children, themaProps }: ProvidersProps) {
+  const router = useRouter();
+
   return (
-    <HeroUIProvider navigate={router.push}>
-      <NextThemasProvider {...themaProps}>{children}</NextThemasProvider>
-    </HeroUIProvider>
+    <SessionProvider>
+      <HeroUIProvider navigate={router.push}>
+        <NextThemasProvider {...themaProps}>{children}</NextThemasProvider>
+      </HeroUIProvider>
+    </SessionProvider>
   );
 }
