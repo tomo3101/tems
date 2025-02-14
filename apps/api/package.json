@@ -12,11 +12,11 @@
     }
   },
   "scripts": {
-    "build": "pnpm remove-dist && tsc",
+    "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "lint": "eslint \"src/**/*.ts*\" --max-warnings 0",
     "start": "node ./dist/src/index.js",
-    "push": "pnpm build && drizzle-kit push",
+    "push": "drizzle-kit push",
     "remove-dist": "rm -rf dist"
   },
   "dependencies": {

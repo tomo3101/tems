@@ -2,10 +2,13 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
+    "remove-dist": {
+      "cache": false
+    },
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**", "public/dist/**"],
-      "dependsOn": ["^build"],
+      "dependsOn": ["remove-dist", "^build"],
       "env": ["NEXT_PUBLIC_API_HOST"]
     },
     "start": {
@@ -23,7 +26,8 @@
       "persistent": true
     },
     "push": {
-      "cache": false
+      "cache": false,
+      "dependsOn": ["build"]
     }
   }
 }
