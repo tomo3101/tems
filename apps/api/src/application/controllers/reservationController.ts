@@ -4,6 +4,7 @@ import type {
   deleteReservationsRoute,
   getReservationsByIdRoute,
   getReservationsByMemberRoute,
+  getReservationsByQrCodeRoute,
   getReservationsRoute,
   postReservationsRoute,
   putReservationsRoute,
@@ -279,6 +280,52 @@ export const getReservationsByMemberHandler: RouteHandler<
     );
 
     return c.json(response, 200);
+  } catch (e: unknown) {
+    console.log(e);
+    return c.json(
+      {
+        message: 'Internal Server Error',
+        error: e instanceof Error ? e.message : undefined,
+      },
+      500,
+    );
+  }
+};
+
+// QRコードの予約取得用ハンドラ
+export const getReservationsByQrCodeHandler: RouteHandler<
+  typeof getReservationsByQrCodeRoute
+> = async (c) => {
+  const param = c.req.valid('param');
+
+  try {
+    const reservationRepository = new ReservationRepository();
+    const reservation = await reservationRepository.findByQrCode(
+      param.qrCodeHash,
+    );
+
+    if (reservation === undefined) {
+      return c.json(
+        { message: 'Not Found', error: 'reservation not found' },
+        404,
+      );
+    }
+
+    return c.json(
+      {
+        id: reservation.reservation_id,
+        eventId: reservation.event_id,
+        memberId: reservation.member_id,
+        numberOfPeople: reservation.number_of_people,
+        qrCodeHash: reservation.qr_code_hash,
+        callNumber: reservation.call_number,
+        status: reservation.status,
+        createdAt: reservation.created_at.toISOString(),
+        checkedInAt: reservation.checked_in_at?.toISOString(),
+        calledAt: reservation.called_at?.toISOString(),
+      },
+      200,
+    );
   } catch (e: unknown) {
     console.log(e);
     return c.json(

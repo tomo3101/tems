@@ -3,6 +3,7 @@ import {
   deleteReservationsHandler,
   getReservationsByIdHandler,
   getReservationsByMemberHandler,
+  getReservationsByQrCodeHandler,
   getReservationsHandler,
   postReservationsHandler,
   putReservationsHandler,
@@ -27,6 +28,7 @@ import {
   getReservationsQuerySchema,
   postReservationsBodySchema,
   putReservationsBodySchema,
+  qrCodeHashParamsSchema,
   reservationIdParamsSchema,
   reservationSchema,
   reservationsWithEventListSchema,
@@ -408,6 +410,69 @@ export const getReservationsByMemberRoute = createRoute({
   tags: ['予約'],
 });
 
+// 指定したQRコードの予約取得用ルート
+export const getReservationsByQrCodeRoute = createRoute({
+  method: 'get',
+  path: '/qrcode/{qrCodeHash}',
+  description: '指定したQRコードの予約を取得します。',
+  request: {
+    params: qrCodeHashParamsSchema,
+  },
+  middleware: [jwtAuthMiddleware] as const,
+  security: [{ JWT: [] }],
+  responses: {
+    200: {
+      description: 'Success',
+      content: {
+        'application/json': {
+          schema: reservationSchema,
+        },
+      },
+    },
+    400: {
+      description: 'Bad Request',
+      content: {
+        'application/json': {
+          schema: badRequestErrorSchema,
+        },
+      },
+    },
+    401: {
+      description: 'Unauthorized',
+      content: {
+        'application/json': {
+          schema: unauthorizedErrorSchema,
+        },
+      },
+    },
+    403: {
+      description: 'Forbidden',
+      content: {
+        'application/json': {
+          schema: forbiddenErrorSchema,
+        },
+      },
+    },
+    404: {
+      description: 'Not Found',
+      content: {
+        'application/json': {
+          schema: notFoundErrorSchema,
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: internalServerErrorSchema,
+        },
+      },
+    },
+  },
+  tags: ['予約'],
+});
+
 const app = new OpenAPIHono();
 
 const routes = app
@@ -416,6 +481,7 @@ const routes = app
   .openapi(getReservationsByIdRoute, getReservationsByIdHandler)
   .openapi(putReservationsRoute, putReservationsHandler)
   .openapi(deleteReservationsRoute, deleteReservationsHandler)
-  .openapi(getReservationsByMemberRoute, getReservationsByMemberHandler);
+  .openapi(getReservationsByMemberRoute, getReservationsByMemberHandler)
+  .openapi(getReservationsByQrCodeRoute, getReservationsByQrCodeHandler);
 
 export default routes;
