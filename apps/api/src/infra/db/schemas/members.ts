@@ -8,7 +8,7 @@ export const members = mysqlTable('members', {
   name: varchar({ length: 60 }).notNull(),
   email: varchar({ length: 255 }).notNull(),
   password_hash: varchar({ length: 60 }).notNull(),
-  phone_number: varchar({ length: 21 }).notNull(),
+  phone_number: varchar({ length: 21 }),
   ...datetimes,
 });
 
