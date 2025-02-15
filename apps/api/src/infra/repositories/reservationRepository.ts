@@ -1,6 +1,6 @@
 import { z } from '@hono/zod-openapi';
 import { createHash } from 'crypto';
-import { and, eq, gte, lte, type SQLWrapper } from 'drizzle-orm';
+import { and, count, eq, gte, lte, sum, type SQLWrapper } from 'drizzle-orm';
 import type {
   getReservationsByMemberIdQuerySchema,
   getReservationsQuerySchema,
@@ -8,7 +8,6 @@ import type {
   putReservationsBodySchema,
 } from '../../application/schemas/reservationSchema.js';
 import { db } from '../db/helpers/connecter.js';
-import { events } from '../db/schemas/events.js';
 import { reservations } from '../db/schemas/reservations.js';
 
 type getReservationsQuerySchema = z.infer<typeof getReservationsQuerySchema>;
@@ -22,28 +21,35 @@ export class ReservationRepository {
   async findAll(query: getReservationsQuerySchema) {
     const filters: SQLWrapper[] = [];
 
-    if (query.event_id) {
-      filters.push(eq(reservations.event_id, query.event_id));
+    if (query.eventId) {
+      filters.push(eq(reservations.event_id, query.eventId));
     }
 
-    if (query.member_id) {
-      filters.push(eq(reservations.member_id, query.member_id));
+    if (query.memberId) {
+      filters.push(eq(reservations.member_id, query.memberId));
+    }
+
+    if (query.qrCodeHash) {
+      filters.push(eq(reservations.qr_code_hash, query.qrCodeHash));
     }
 
     if (query.status) {
       filters.push(eq(reservations.status, query.status));
     }
 
-    if (query.start_time) {
-      filters.push(gte(reservations.created_at, new Date(query.start_time)));
+    if (query.startTime) {
+      filters.push(gte(reservations.created_at, new Date(query.startTime)));
     }
 
-    if (query.end_time) {
-      filters.push(lte(reservations.created_at, new Date(query.end_time)));
+    if (query.endTime) {
+      filters.push(lte(reservations.created_at, new Date(query.endTime)));
     }
 
     return db.query.reservations.findMany({
       where: and(...filters),
+      with: {
+        events: true,
+      },
       limit: query.limit,
     });
   }
@@ -60,24 +66,27 @@ export class ReservationRepository {
   ) {
     const filters: SQLWrapper[] = [];
 
-    if (query.event_id) {
-      filters.push(eq(reservations.event_id, query.event_id));
+    if (query.id) {
+      filters.push(eq(reservations.event_id, query.id));
     }
 
     if (query.status) {
       filters.push(eq(reservations.status, query.status));
     }
 
-    if (query.start_time) {
-      filters.push(gte(reservations.created_at, new Date(query.start_time)));
+    if (query.startTime) {
+      filters.push(gte(reservations.created_at, new Date(query.startTime)));
     }
 
-    if (query.end_time) {
-      filters.push(lte(reservations.created_at, new Date(query.end_time)));
+    if (query.endTime) {
+      filters.push(lte(reservations.created_at, new Date(query.endTime)));
     }
 
     return db.query.reservations.findMany({
       where: and(eq(reservations.member_id, memberId), ...filters),
+      with: {
+        events: true,
+      },
       limit: query.limit,
     });
   }
@@ -88,38 +97,60 @@ export class ReservationRepository {
     });
   }
 
-  async create(memberId: number, reservation: postReservationsBodySchema) {
-    return await db.transaction(async (tx) => {
-      const event = await tx
-        .select({
-          capacity: events.capacity,
-          reserved_count: db.$count(
-            reservations,
-            eq(reservations.event_id, events.event_id),
-          ),
-        })
-        .from(events)
-        .where(eq(events.event_id, reservation.event_id))
-        .limit(1)
-        .then((rows) => rows[0]);
+  async getReservedCount(eventId: number) {
+    return db.query.reservations.findFirst({
+      where: eq(reservations.event_id, eventId),
+      columns: {},
+      extras: {
+        reserved_count: sum(reservations.number_of_people).as('reserved_count'),
+      },
+    });
+  }
 
-      if (
-        event.capacity <
-        event.reserved_count + reservation.number_of_people
-      ) {
+  async create(memberId: number, body: postReservationsBodySchema) {
+    return await db.transaction(async (tx) => {
+      const event = await tx.query.events.findFirst({
+        where: eq(reservations.event_id, body.eventId),
+      });
+
+      if (event === undefined) {
+        throw new Error('event not found');
+      }
+
+      const reservation = await tx.query.reservations.findFirst({
+        where: eq(reservations.event_id, body.eventId),
+        columns: {},
+        extras: {
+          reserved_number: sum(reservations.number_of_people).as(
+            'reserved_number',
+          ),
+          reserved_count: count(reservations.reservation_id).as(
+            'reserved_count',
+          ),
+        },
+      });
+
+      const reservedNumber = reservation
+        ? Number(reservation.reserved_number)
+        : 0;
+
+      const reservedCount = reservation?.reserved_count ?? 0;
+
+      if (event.capacity < reservedNumber + body.numberOfPeople) {
         throw new Error('capacity is not enough');
       }
 
-      const qrCodeValue = `${reservation.event_id}-${memberId}-${reservation.number_of_people}-${new Date().toISOString()}`;
+      const qrCodeValue = `${body.eventId}-${memberId}-${body.numberOfPeople}-${new Date().toISOString()}`;
       const qrCodeHash = createHash('sha256').update(qrCodeValue).digest('hex');
 
       const createdId = await tx
         .insert(reservations)
         .values({
-          event_id: reservation.event_id,
+          event_id: body.eventId,
           member_id: memberId,
-          number_of_people: reservation.number_of_people,
+          number_of_people: body.numberOfPeople,
           qr_code_hash: qrCodeHash,
+          call_number: reservedCount + 1,
         })
         .$returningId();
 
@@ -142,19 +173,48 @@ export class ReservationRepository {
       throw new Error('reservation not found');
     }
 
-    if (existsReservation.status === 'checked_in') {
-      throw new Error('reservation is checked in');
-    } else if (existsReservation.status === 'cancelled') {
+    if (existsReservation.status === 'cancelled') {
       throw new Error('reservation is cancelled');
+    } else if (existsReservation.status === reservation.status) {
+      throw new Error('status is same');
     }
 
-    await db
-      .update(reservations)
-      .set({
-        number_of_people: reservation.number_of_people,
-        status: reservation.status,
-      })
-      .where(eq(reservations.reservation_id, id));
+    // ステータスをチェックインに更新する場合、ckecked_in_atを更新
+    switch (reservation.status) {
+      case 'checked_in': {
+        await db
+          .update(reservations)
+          .set({
+            status: reservation.status,
+            checked_in_at: new Date(),
+          })
+          .where(eq(reservations.reservation_id, id));
+
+        break;
+      }
+
+      case 'called': {
+        await db
+          .update(reservations)
+          .set({
+            status: reservation.status,
+            called_at: new Date(),
+          })
+          .where(eq(reservations.reservation_id, id));
+
+        break;
+      }
+
+      default:
+        await db
+          .update(reservations)
+          .set({
+            number_of_people: reservation.numberOfPeople,
+            status: reservation.status,
+          })
+          .where(eq(reservations.reservation_id, id));
+        break;
+    }
 
     const updatedReservation = await this.findById(id);
 
