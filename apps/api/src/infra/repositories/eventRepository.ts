@@ -6,6 +6,7 @@ import {
   gte,
   like,
   lte,
+  sum,
   type SQLWrapper,
 } from 'drizzle-orm';
 import type {
@@ -49,13 +50,12 @@ export class EventRepository {
     const dynamicQuery = db
       .select({
         ...getTableColumns(events),
-        reserved_count: db.$count(
-          reservations,
-          eq(reservations.event_id, events.event_id),
-        ),
+        reserved_count: sum(reservations.number_of_people),
       })
       .from(events)
       .where(and(...filters))
+      .leftJoin(reservations, eq(events.event_id, reservations.event_id))
+      .groupBy(events.event_id)
       .$dynamic();
 
     return withLimit(dynamicQuery, query.limit);
@@ -65,13 +65,12 @@ export class EventRepository {
     return db
       .select({
         ...getTableColumns(events),
-        reserved_count: db.$count(
-          reservations,
-          eq(reservations.event_id, events.event_id),
-        ),
+        reserved_count: sum(reservations.number_of_people),
       })
       .from(events)
       .where(eq(events.event_id, id))
+      .leftJoin(reservations, eq(events.event_id, reservations.event_id))
+      .groupBy(events.event_id)
       .limit(1)
       .then((rows) => rows[0]);
   }
