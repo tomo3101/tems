@@ -84,7 +84,7 @@ export const getAdminsRoute = createRoute({
 //管理者一件取得用ルート
 export const getAdminsByIdRoute = createRoute({
   method: 'get',
-  path: '/{admin_id}',
+  path: '/{id}',
   description: '指定した管理者を取得します。',
   request: {
     params: adminIdParamsSchema,
@@ -206,7 +206,7 @@ export const postAdminsRoute = createRoute({
 // 管理者更新用ルート
 export const putAdminsRoute = createRoute({
   method: 'put',
-  path: '/{admin_id}',
+  path: '/{id}',
   description: '指定した管理者を更新します。',
   request: {
     params: adminIdParamsSchema,
@@ -275,7 +275,7 @@ export const putAdminsRoute = createRoute({
 // 管理者削除用ルート
 export const deleteAdminsRoute = createRoute({
   method: 'delete',
-  path: '/{admin_id}',
+  path: '/{id}',
   description: '指定した管理者を削除します。',
   request: {
     params: adminIdParamsSchema,

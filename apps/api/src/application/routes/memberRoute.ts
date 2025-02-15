@@ -86,7 +86,7 @@ export const getMembersRoute = createRoute({
 // 会員一件取得用ルート
 export const getMembersByIdRoute = createRoute({
   method: 'get',
-  path: '/{member_id}',
+  path: '/{id}',
   description: '指定した会員を一件取得します。',
   request: {
     params: memberIdParamsSchema,
@@ -208,7 +208,7 @@ export const postMembersRoute = createRoute({
 // 会員更新用ルート
 export const putMembersRoute = createRoute({
   method: 'put',
-  path: '/{member_id}',
+  path: '/{id}',
   description: '指定した会員を更新します。',
   request: {
     params: memberIdParamsSchema,
@@ -278,7 +278,7 @@ export const putMembersRoute = createRoute({
 // 会員削除用ルート
 export const deleteMembersRoute = createRoute({
   method: 'delete',
-  path: '/{member_id}',
+  path: '/{id}',
   description: '指定した会員を削除します。',
   request: {
     params: memberIdParamsSchema,

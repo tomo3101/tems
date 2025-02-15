@@ -10,9 +10,9 @@ export const deleteLogoutHandler: RouteHandler<
 
   try {
     const tokenRepository = new TokenRepository();
-    const result = await tokenRepository.deleteByToken(token.refresh_token);
+    const result = await tokenRepository.deleteByToken(token.refreshToken);
 
-    return c.json({ user_id: result.user_id, role: result.role }, 200);
+    return c.json({ userId: result.user_id, role: result.role }, 200);
   } catch (e: unknown) {
     console.log(e);
 

@@ -1,10 +1,6 @@
 import type { RouteHandler } from '@hono/zod-openapi';
 import { TokenRepository } from '../../infra/repositories/tokenRepository.js';
-import {
-  createAccessToken,
-  setAccessTokenCookie,
-  verifyRefreshToken,
-} from '../../utils/jwt.js';
+import { createAccessToken, verifyRefreshToken } from '../../utils/jwt.js';
 import type { postRefreshRoute } from '../routes/refreshRoute.js';
 
 // アクセストークンのリフレッシュ用ハンドラ
@@ -15,7 +11,7 @@ export const postRefreshHandler: RouteHandler<typeof postRefreshRoute> = async (
 
   try {
     const tokenRepository = new TokenRepository();
-    const token = await tokenRepository.findByToken(body.refresh_token);
+    const token = await tokenRepository.findByToken(body.refreshToken);
 
     if (token === undefined) {
       console.log('token not found');
@@ -27,21 +23,19 @@ export const postRefreshHandler: RouteHandler<typeof postRefreshRoute> = async (
     }
 
     try {
-      const refreshToken = await verifyRefreshToken(body.refresh_token);
+      const refreshToken = await verifyRefreshToken(body.refreshToken);
 
       const accessToken = await createAccessToken(
-        refreshToken.user_id,
+        refreshToken.userId,
         refreshToken.role,
       );
 
-      setAccessTokenCookie(c, accessToken.token);
-
       return c.json(
         {
-          user_id: refreshToken.user_id,
+          userId: refreshToken.userId,
           role: refreshToken.role,
-          access_token: accessToken.token,
-          access_token_exp: accessToken.exp,
+          accessToken: accessToken.token,
+          accessTokenExp: accessToken.exp,
         },
         200,
       );

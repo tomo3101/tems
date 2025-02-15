@@ -3,12 +3,7 @@ import { compare } from 'bcrypt';
 import { AdminRepository } from '../../infra/repositories/adminRepository.js';
 import { MemberRepository } from '../../infra/repositories/memberRepository.js';
 import { TokenRepository } from '../../infra/repositories/tokenRepository.js';
-import {
-  createAccessToken,
-  createRefreshToken,
-  setAccessTokenCookie,
-  setRefreshTokenCookie,
-} from '../../utils/jwt.js';
+import { createAccessToken, createRefreshToken } from '../../utils/jwt.js';
 import type { postLoginAdminRoute } from '../routes/loginRoute.js';
 
 // ログイン用ハンドラ
@@ -47,19 +42,16 @@ export const postLoginHandler: RouteHandler<
       const tokenRepository = new TokenRepository();
       await tokenRepository.create(member.member_id, 'member', refreshToken);
 
-      setAccessTokenCookie(c, accessToken.token);
-      setRefreshTokenCookie(c, refreshToken.token);
-
       return c.json(
         {
-          user_id: member.member_id,
+          userId: member.member_id,
           name: member.name,
           email: member.email,
           role: body.role,
-          access_token: accessToken.token,
-          access_token_exp: accessToken.exp,
-          refresh_token: refreshToken.token,
-          refresh_token_exp: refreshToken.exp,
+          accessToken: accessToken.token,
+          accessTokenExp: accessToken.exp,
+          refreshToken: refreshToken.token,
+          refreshTokenExp: refreshToken.exp,
         },
         200,
       );
@@ -100,19 +92,16 @@ export const postLoginHandler: RouteHandler<
       const tokenRepository = new TokenRepository();
       await tokenRepository.create(admin.admin_id, 'admin', refreshToken);
 
-      setAccessTokenCookie(c, accessToken.token);
-      setRefreshTokenCookie(c, refreshToken.token);
-
       return c.json(
         {
-          user_id: admin.admin_id,
+          userId: admin.admin_id,
           name: admin.name,
           email: admin.email,
           role: body.role,
-          access_token: accessToken.token,
-          access_token_exp: accessToken.exp,
-          refresh_token: refreshToken.token,
-          refresh_token_exp: refreshToken.exp,
+          accessToken: accessToken.token,
+          accessTokenExp: accessToken.exp,
+          refreshToken: refreshToken.token,
+          refreshTokenExp: refreshToken.exp,
         },
         200,
       );

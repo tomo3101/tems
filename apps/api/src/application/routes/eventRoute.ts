@@ -34,8 +34,6 @@ export const getEventsRoute = createRoute({
   request: {
     query: getEventsQuerySchema,
   },
-  security: [{ JWT: [] }],
-  middleware: [jwtAuthMiddleware] as const,
   responses: {
     200: {
       description: 'Success',
@@ -84,7 +82,7 @@ export const getEventsRoute = createRoute({
 // イベント一件取得用ルート
 export const getEventsByIdRoute = createRoute({
   method: 'get',
-  path: '/{event_id}',
+  path: '/{id}',
   description: '指定したイベントを取得します。',
   request: {
     params: eventIdParamsSchema,
@@ -208,7 +206,7 @@ export const postEventsRoute = createRoute({
 // イベント更新用ルート
 export const putEventsRoute = createRoute({
   method: 'put',
-  path: '/{event_id}',
+  path: '/{id}',
   description: '指定したイベントを更新します。',
   request: {
     params: eventIdParamsSchema,
@@ -278,7 +276,7 @@ export const putEventsRoute = createRoute({
 // イベント削除用ルート
 export const deleteEventsRoute = createRoute({
   method: 'delete',
-  path: '/{event_id}',
+  path: '/{id}',
   description: '指定したイベントを削除します。',
   request: {
     params: eventIdParamsSchema,

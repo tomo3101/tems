@@ -2,25 +2,39 @@ import { z } from '@hono/zod-openapi';
 
 // 予約スキーマ
 export const reservationSchema = z.object({
-  reservation_id: z.number().int().positive().openapi({ example: 1 }),
-  event_id: z.number().int().positive().openapi({ example: 1 }),
-  member_id: z.number().int().positive().openapi({ example: 1 }),
-  number_of_people: z.number().int().positive().openapi({ example: 1 }),
-  qr_code_hash: z.string().openapi({
+  id: z.number().int().positive().openapi({ example: 1 }),
+  eventId: z.number().int().positive().openapi({ example: 1 }),
+  memberId: z.number().int().positive().openapi({ example: 1 }),
+  numberOfPeople: z.number().int().positive().openapi({ example: 1 }),
+  qrCodeHash: z.string().openapi({
     example: '3e282f3fab90aef740a6e4baabda7567ab8bba63b9dad310953746d7992a9cde',
   }),
   status: z
-    .enum(['reserved', 'checked_in', 'cancelled'])
+    .enum(['reserved', 'checked_in', 'cancelled', 'called', 'done'])
     .openapi({ example: 'reserved' }),
-  created_at: z
+  callNumber: z.number().int().positive().openapi({ example: 1 }),
+  createdAt: z
     .string()
     .datetime()
     .openapi({ example: '2022-01-01T00:00:00.000Z' }),
-  checked_in_at: z
+  checkedInAt: z
     .string()
     .datetime()
     .optional()
     .openapi({ example: '2022-01-01T00:00:00.000Z' }),
+  calledAt: z
+    .string()
+    .datetime()
+    .optional()
+    .openapi({ example: '2022-01-01T00:00:00.000Z' }),
+});
+
+// 予約イベントスキーマ
+export const reservationWithEventSchema = reservationSchema.extend({
+  eventName: z.string().openapi({ example: 'イベント名' }),
+  eventDate: z.string().date().openapi({ example: '2022-01-01' }),
+  eventStartTime: z.string().time().openapi({ example: '12:00:00' }),
+  eventEndTime: z.string().time().openapi({ example: '13:00:00' }),
 });
 
 // 予約リストスキーマ
@@ -28,32 +42,47 @@ export const reservationsListSchema = z
   .array(reservationSchema)
   .openapi('ReservationsList');
 
+// 予約イベントリストスキーマ
+export const reservationsWithEventListSchema = z
+  .array(reservationWithEventSchema)
+  .openapi('ReservationsWithEventList');
+
 // 予約IDパラメータスキーマ
 export const reservationIdParamsSchema = z.object({
-  reservation_id: z
+  id: z
     .string()
     .pipe(z.coerce.number().int().positive())
     .openapi({ example: '1' }),
 });
 
+// QRコードハッシュパラメータスキーマ
+export const qrCodeHashParamsSchema = z.object({
+  qrCodeHash: z.string().openapi({
+    example: '3e282f3fab90aef740a6e4baabda7567ab8bba63b9dad310953746d7992a9cde',
+  }),
+});
+
 // 予約全件取得用クエリスキーマ
 export const getReservationsQuerySchema = z.object({
-  event_id: z
+  eventId: z
     .string()
     .pipe(z.coerce.number().int().positive())
     .optional()
     .openapi({ example: '1' }),
-  member_id: z
+  memberId: z
     .string()
     .pipe(z.coerce.number().int().positive())
     .optional()
     .openapi({ example: '1' }),
+  qrCodeHash: z.string().optional().openapi({
+    example: '3e282f3fab90aef740a6e4baabda7567ab8bba63b9dad310953746d7992a9cde',
+  }),
   status: z
-    .enum(['reserved', 'checked_in', 'cancelled'])
+    .enum(['reserved', 'checked_in', 'cancelled', 'called'])
     .optional()
     .openapi({ example: 'reserved' }),
-  start_time: z.string().date().optional().openapi({ example: '2022-01-01' }),
-  end_time: z.string().date().optional().openapi({ example: '2022-12-31' }),
+  startTime: z.string().date().optional().openapi({ example: '2022-01-01' }),
+  endTime: z.string().date().optional().openapi({ example: '2022-12-31' }),
   limit: z
     .string()
     .pipe(z.coerce.number().int().positive())
@@ -63,17 +92,17 @@ export const getReservationsQuerySchema = z.object({
 
 // メンバーの予約取得用クエリスキーマ
 export const getReservationsByMemberIdQuerySchema = z.object({
-  event_id: z
+  id: z
     .string()
     .pipe(z.coerce.number().int().positive())
     .optional()
     .openapi({ example: '1' }),
   status: z
-    .enum(['reserved', 'checked_in', 'cancelled'])
+    .enum(['reserved', 'checked_in', 'cancelled', 'called'])
     .optional()
     .openapi({ example: 'reserved' }),
-  start_time: z.string().date().optional().openapi({ example: '2022-01-01' }),
-  end_time: z.string().date().optional().openapi({ example: '2022-12-31' }),
+  startTime: z.string().date().optional().openapi({ example: '2022-01-01' }),
+  endTime: z.string().date().optional().openapi({ example: '2022-12-31' }),
   limit: z
     .string()
     .pipe(z.coerce.number().int().positive())
@@ -83,20 +112,20 @@ export const getReservationsByMemberIdQuerySchema = z.object({
 
 // 予約作成用ボディスキーマ
 export const postReservationsBodySchema = z.object({
-  event_id: z.number().int().positive().openapi({ example: 1 }),
-  number_of_people: z.number().int().positive().openapi({ example: 1 }),
+  eventId: z.number().int().positive().openapi({ example: 1 }),
+  numberOfPeople: z.number().int().positive().openapi({ example: 1 }),
 });
 
 // 予約更新用ボディスキーマ
 export const putReservationsBodySchema = z.object({
-  number_of_people: z
+  numberOfPeople: z
     .number()
     .int()
     .positive()
     .optional()
     .openapi({ example: 1 }),
   status: z
-    .enum(['reserved', 'checked_in', 'cancelled'])
+    .enum(['reserved', 'checked_in', 'cancelled', 'called'])
     .optional()
     .openapi({ example: 'reserved' }),
 });

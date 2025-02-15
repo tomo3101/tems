@@ -1,6 +1,4 @@
-import type { Context } from 'hono';
 import { sign, verify } from 'hono/jwt';
-import { serialize } from 'hono/utils/cookie';
 import type { JWTPayload } from 'hono/utils/jwt/types';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -34,7 +32,7 @@ export const createAccessToken = async (
   return {
     token: await sign(
       {
-        user_id: userId,
+        userId: userId,
         role: role,
         exp: exp,
       },
@@ -54,7 +52,7 @@ export const createRefreshToken = async (
   return {
     token: await sign(
       {
-        user_id: userId,
+        userId: userId,
         role: role,
         exp: exp,
       },
@@ -65,39 +63,11 @@ export const createRefreshToken = async (
 };
 
 interface RefreshTokenPayload extends JWTPayload {
-  user_id: number;
+  userId: number;
   role: 'admin' | 'member';
 }
 
 // リフレッシュトークンの検証
 export const verifyRefreshToken = async (token: string) => {
   return verify(token, refreshTokenSecret) as Promise<RefreshTokenPayload>;
-};
-
-// アクセストークンのクッキー設定
-export const setAccessTokenCookie = (c: Context, token: string) => {
-  c.res.headers.append(
-    'Set-Cookie',
-    serialize('accessToken', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: parseInt(accessTokenExp),
-      path: '/api/v1',
-    }),
-  );
-};
-
-// リフレッシュトークンのクッキー設定
-export const setRefreshTokenCookie = (c: Context, token: string) => {
-  c.res.headers.append(
-    'Set-Cookie',
-    serialize('refreshToken', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: parseInt(refreshTokenExp),
-      path: '/api/v1',
-    }),
-  );
 };

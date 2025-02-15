@@ -2,14 +2,14 @@ import { z } from '@hono/zod-openapi';
 
 // 管理者スキーマ
 export const adminSchema = z.object({
-  admin_id: z.number().int().positive().openapi({ example: 1 }),
+  id: z.number().int().positive().openapi({ example: 1 }),
   name: z.string().openapi({ example: '田中 太郎' }),
   email: z.string().email().openapi({ example: 'example@email.com' }),
-  created_at: z
+  createdAt: z
     .string()
     .datetime()
     .openapi({ example: '2024-01-01T12:00:000Z' }),
-  updated_at: z
+  updatedAt: z
     .string()
     .datetime()
     .openapi({ example: '2024-01-01T12:00:000Z' }),
@@ -20,7 +20,7 @@ export const adminsListSchema = z.array(adminSchema).openapi('AdminsList');
 
 // 管理者IDパラメータスキーマ
 export const adminIdParamsSchema = z.object({
-  admin_id: z
+  id: z
     .string()
     .pipe(z.coerce.number().int().positive())
     .openapi({ example: '1' }),
@@ -34,8 +34,8 @@ export const getAdminsQuerySchema = z.object({
     .email()
     .optional()
     .openapi({ example: 'example@email.com' }),
-  start_date: z.string().date().optional().openapi({ example: '2024-01-01' }),
-  end_date: z.string().date().optional().openapi({ example: '2024-12-31' }),
+  startDate: z.string().date().optional().openapi({ example: '2024-01-01' }),
+  endDate: z.string().date().optional().openapi({ example: '2024-12-31' }),
   limit: z
     .string()
     .pipe(z.coerce.number().int().positive())

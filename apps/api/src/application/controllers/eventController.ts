@@ -25,16 +25,16 @@ export const getEventsHandler: RouteHandler<typeof getEventsRoute> = async (
 
     const response: eventsListSchema = events.map((event) => {
       return {
-        event_id: event.event_id,
-        admin_id: event.admin_id,
+        id: event.event_id,
+        adminId: event.admin_id,
         name: event.name,
         date: dayjs(event.date).format('YYYY-MM-DD'),
-        start_time: event.start_time,
-        end_time: event.end_time,
+        startTime: event.start_time,
+        endTime: event.end_time,
         capacity: event.capacity,
-        reserved_count: event.reserved_count,
-        created_at: event.created_at.toISOString(),
-        updated_at: event.updated_at.toISOString(),
+        reservedCount: Number(event.reserved_count),
+        createdAt: event.created_at.toISOString(),
+        updatedAt: event.updated_at.toISOString(),
       };
     });
 
@@ -59,7 +59,7 @@ export const getEventsByIdHandler: RouteHandler<
 
   try {
     const eventRepository = new EventRepository();
-    const event = await eventRepository.findById(param.event_id);
+    const event = await eventRepository.findById(param.id);
 
     if (event === undefined) {
       return c.json({ message: 'Not Found', error: 'event not fonud' }, 404);
@@ -67,16 +67,16 @@ export const getEventsByIdHandler: RouteHandler<
 
     return c.json(
       {
-        event_id: event.event_id,
-        admin_id: event.admin_id,
+        id: event.event_id,
+        adminId: event.admin_id,
         name: event.name,
         date: dayjs(event.date).format('YYYY-MM-DD'),
-        start_time: event.start_time,
-        end_time: event.end_time,
+        startTime: event.start_time,
+        endTime: event.end_time,
         capacity: event.capacity,
-        reserved_count: event.reserved_count,
-        created_at: event.created_at.toISOString(),
-        updated_at: event.updated_at.toISOString(),
+        reservedCount: Number(event.reserved_count),
+        createdAt: event.created_at.toISOString(),
+        updatedAt: event.updated_at.toISOString(),
       },
       200,
     );
@@ -97,7 +97,7 @@ export const postEventsHandler: RouteHandler<typeof postEventsRoute> = async (
   c,
 ) => {
   const body = c.req.valid('json');
-  const { user_id } = c.get('jwtPayload');
+  const { user_id } = c.get('jwtPayload') as { user_id: number };
 
   try {
     const eventRepository = new EventRepository();
@@ -105,15 +105,15 @@ export const postEventsHandler: RouteHandler<typeof postEventsRoute> = async (
 
     return c.json(
       {
-        event_id: event.event_id,
-        admin_id: event.admin_id,
+        id: event.event_id,
+        adminId: event.admin_id,
         name: event.name,
         date: dayjs(event.date).format('YYYY-MM-DD'),
-        start_time: event.start_time,
-        end_time: event.end_time,
+        startTime: event.start_time,
+        endTime: event.end_time,
         capacity: event.capacity,
-        created_at: event.created_at.toISOString(),
-        updated_at: event.updated_at.toISOString(),
+        createdAt: event.created_at.toISOString(),
+        updatedAt: event.updated_at.toISOString(),
       },
       201,
     );
@@ -138,19 +138,19 @@ export const putEventsHandler: RouteHandler<typeof putEventsRoute> = async (
 
   try {
     const eventRepository = new EventRepository();
-    const event = await eventRepository.update(param.event_id, body);
+    const event = await eventRepository.update(param.id, body);
 
     return c.json(
       {
-        event_id: event.event_id,
-        admin_id: event.admin_id,
+        id: event.event_id,
+        adminId: event.admin_id,
         name: event.name,
         date: dayjs(event.date).format('YYYY-MM-DD'),
-        start_time: event.start_time,
-        end_time: event.end_time,
+        startTime: event.start_time,
+        endTime: event.end_time,
         capacity: event.capacity,
-        created_at: event.created_at.toISOString(),
-        updated_at: event.updated_at.toISOString(),
+        createdAt: event.created_at.toISOString(),
+        updatedAt: event.updated_at.toISOString(),
       },
       200,
     );
@@ -179,7 +179,7 @@ export const deleteEventsHandler: RouteHandler<
 
   try {
     const eventRepository = new EventRepository();
-    await eventRepository.delete(param.event_id);
+    await eventRepository.delete(param.id);
 
     return c.json(
       {

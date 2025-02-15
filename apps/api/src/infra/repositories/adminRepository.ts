@@ -25,12 +25,12 @@ export class AdminRepository {
       filters.push(like(admins.email, query.email));
     }
 
-    if (query.start_date) {
-      filters.push(gte(admins.created_at, new Date(query.start_date)));
+    if (query.startDate) {
+      filters.push(gte(admins.created_at, new Date(query.startDate)));
     }
 
-    if (query.end_date) {
-      filters.push(lte(admins.created_at, new Date(query.end_date)));
+    if (query.endDate) {
+      filters.push(lte(admins.created_at, new Date(query.endDate)));
     }
 
     return db.query.admins.findMany({

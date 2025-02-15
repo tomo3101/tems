@@ -3,12 +3,12 @@ import {
   deleteReservationsHandler,
   getReservationsByIdHandler,
   getReservationsByMemberHandler,
+  getReservationsByQrCodeHandler,
   getReservationsHandler,
   postReservationsHandler,
   putReservationsHandler,
 } from '../controllers/reservationController.js';
 import {
-  adminAuthMiddleware,
   jwtAuthMiddleware,
   reservationAuthMiddleware,
   userAuthMiddleware,
@@ -28,9 +28,10 @@ import {
   getReservationsQuerySchema,
   postReservationsBodySchema,
   putReservationsBodySchema,
+  qrCodeHashParamsSchema,
   reservationIdParamsSchema,
   reservationSchema,
-  reservationsListSchema,
+  reservationsWithEventListSchema,
 } from '../schemas/reservationSchema.js';
 
 // 予約一覧取得用ルート
@@ -41,14 +42,14 @@ export const getReservationsRoute = createRoute({
   request: {
     query: getReservationsQuerySchema,
   },
-  middleware: [jwtAuthMiddleware, adminAuthMiddleware] as const,
+  middleware: [jwtAuthMiddleware] as const,
   security: [{ JWT: [] }],
   responses: {
     200: {
       description: 'Success',
       content: {
         'application/json': {
-          schema: reservationsListSchema,
+          schema: reservationsWithEventListSchema,
         },
       },
     },
@@ -91,7 +92,7 @@ export const getReservationsRoute = createRoute({
 // 予約一件取得用ルート
 export const getReservationsByIdRoute = createRoute({
   method: 'get',
-  path: '/{reservation_id}',
+  path: '/{id}',
   description: '指定した予約を取得します。',
   request: {
     params: reservationIdParamsSchema,
@@ -223,7 +224,7 @@ export const postReservationsRoute = createRoute({
 // 予約更新用ルート
 export const putReservationsRoute = createRoute({
   method: 'put',
-  path: '/{reservation_id}',
+  path: '/{id}',
   description: '指定した予約を更新します。',
   request: {
     params: reservationIdParamsSchema,
@@ -293,7 +294,7 @@ export const putReservationsRoute = createRoute({
 // 予約削除用ルート
 export const deleteReservationsRoute = createRoute({
   method: 'delete',
-  path: '/{reservation_id}',
+  path: '/{id}',
   description: '指定した予約を削除します。',
   request: {
     params: reservationIdParamsSchema,
@@ -356,7 +357,7 @@ export const deleteReservationsRoute = createRoute({
 // 指定のメンバーの予約一覧取得用ルート
 export const getReservationsByMemberRoute = createRoute({
   method: 'get',
-  path: '/members/{member_id}',
+  path: '/members/{id}',
   description: '指定したメンバーの予約一覧を取得します。',
   request: {
     params: memberIdParamsSchema,
@@ -369,7 +370,7 @@ export const getReservationsByMemberRoute = createRoute({
       description: 'Success',
       content: {
         'application/json': {
-          schema: reservationsListSchema,
+          schema: reservationsWithEventListSchema,
         },
       },
     },
@@ -409,6 +410,69 @@ export const getReservationsByMemberRoute = createRoute({
   tags: ['予約'],
 });
 
+// 指定したQRコードの予約取得用ルート
+export const getReservationsByQrCodeRoute = createRoute({
+  method: 'get',
+  path: '/qrcode/{qrCodeHash}',
+  description: '指定したQRコードの予約を取得します。',
+  request: {
+    params: qrCodeHashParamsSchema,
+  },
+  middleware: [jwtAuthMiddleware] as const,
+  security: [{ JWT: [] }],
+  responses: {
+    200: {
+      description: 'Success',
+      content: {
+        'application/json': {
+          schema: reservationSchema,
+        },
+      },
+    },
+    400: {
+      description: 'Bad Request',
+      content: {
+        'application/json': {
+          schema: badRequestErrorSchema,
+        },
+      },
+    },
+    401: {
+      description: 'Unauthorized',
+      content: {
+        'application/json': {
+          schema: unauthorizedErrorSchema,
+        },
+      },
+    },
+    403: {
+      description: 'Forbidden',
+      content: {
+        'application/json': {
+          schema: forbiddenErrorSchema,
+        },
+      },
+    },
+    404: {
+      description: 'Not Found',
+      content: {
+        'application/json': {
+          schema: notFoundErrorSchema,
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: internalServerErrorSchema,
+        },
+      },
+    },
+  },
+  tags: ['予約'],
+});
+
 const app = new OpenAPIHono();
 
 const routes = app
@@ -417,6 +481,7 @@ const routes = app
   .openapi(getReservationsByIdRoute, getReservationsByIdHandler)
   .openapi(putReservationsRoute, putReservationsHandler)
   .openapi(deleteReservationsRoute, deleteReservationsHandler)
-  .openapi(getReservationsByMemberRoute, getReservationsByMemberHandler);
+  .openapi(getReservationsByMemberRoute, getReservationsByMemberHandler)
+  .openapi(getReservationsByQrCodeRoute, getReservationsByQrCodeHandler);
 
 export default routes;

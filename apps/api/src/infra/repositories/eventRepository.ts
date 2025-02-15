@@ -6,6 +6,7 @@ import {
   gte,
   like,
   lte,
+  sum,
   type SQLWrapper,
 } from 'drizzle-orm';
 import type {
@@ -30,32 +31,31 @@ export class EventRepository {
       filters.push(like(events.name, query.name));
     }
 
-    if (query.start_date) {
-      filters.push(gte(events.date, new Date(query.start_date)));
+    if (query.startDate) {
+      filters.push(gte(events.date, new Date(query.startDate)));
     }
 
-    if (query.end_date) {
-      filters.push(lte(events.date, new Date(query.end_date)));
+    if (query.endDate) {
+      filters.push(lte(events.date, new Date(query.endDate)));
     }
 
-    if (query.start_time) {
-      filters.push(gte(events.start_time, query.start_time));
+    if (query.startTime) {
+      filters.push(gte(events.start_time, query.startTime));
     }
 
-    if (query.end_time) {
-      filters.push(lte(events.end_time, query.end_time));
+    if (query.endTime) {
+      filters.push(lte(events.end_time, query.endTime));
     }
 
     const dynamicQuery = db
       .select({
         ...getTableColumns(events),
-        reserved_count: db.$count(
-          reservations,
-          eq(reservations.event_id, events.event_id),
-        ),
+        reserved_count: sum(reservations.number_of_people),
       })
       .from(events)
       .where(and(...filters))
+      .leftJoin(reservations, eq(events.event_id, reservations.event_id))
+      .groupBy(events.event_id)
       .$dynamic();
 
     return withLimit(dynamicQuery, query.limit);
@@ -65,13 +65,12 @@ export class EventRepository {
     return db
       .select({
         ...getTableColumns(events),
-        reserved_count: db.$count(
-          reservations,
-          eq(reservations.event_id, events.event_id),
-        ),
+        reserved_count: sum(reservations.number_of_people),
       })
       .from(events)
       .where(eq(events.event_id, id))
+      .leftJoin(reservations, eq(events.event_id, reservations.event_id))
+      .groupBy(events.event_id)
       .limit(1)
       .then((rows) => rows[0]);
   }
@@ -83,8 +82,8 @@ export class EventRepository {
         admin_id: adminId,
         name: event.name,
         date: new Date(event.date),
-        start_time: event.start_time,
-        end_time: event.end_time,
+        start_time: event.startTime,
+        end_time: event.endTime,
         capacity: event.capacity,
       })
       .$returningId();
@@ -110,8 +109,8 @@ export class EventRepository {
       .set({
         name: event.name,
         date: event.date ? new Date(event.date) : undefined,
-        start_time: event.start_time,
-        end_time: event.end_time,
+        start_time: event.startTime,
+        end_time: event.endTime,
       })
       .where(eq(events.event_id, id));
 

@@ -42,15 +42,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const response = await rawResponse.json();
 
           return {
-            id: response.user_id.toString(),
-            memberId: response.user_id,
+            id: response.userId.toString(),
+            memberId: response.userId,
             name: response.name,
             email: response.email,
             role: response.role,
-            accessToken: response.access_token,
-            accessTokenExp: response.access_token_exp,
-            refreshToken: response.refresh_token,
-            refreshTokenExp: response.refresh_token_exp,
+            accessToken: response.accessToken,
+            accessTokenExp: response.accessTokenExp,
+            refreshToken: response.refreshToken,
+            refreshTokenExp: response.refreshTokenExp,
           };
         }
 

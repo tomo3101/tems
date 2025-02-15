@@ -24,11 +24,19 @@ export const reservations = mysqlTable('reservations', {
     }),
   number_of_people: int().notNull(),
   qr_code_hash: varchar({ length: 128 }).notNull(),
-  status: mysqlEnum('status', ['reserved', 'cancelled', 'checked_in'])
+  status: mysqlEnum('status', [
+    'reserved',
+    'cancelled',
+    'checked_in',
+    'called',
+    'done',
+  ])
     .default('reserved')
     .notNull(),
+  call_number: int().notNull(),
   ...created_at,
   checked_in_at: datetime(),
+  called_at: datetime(),
 });
 
 export const reservationsRelations = relations(reservations, ({ one }) => ({
