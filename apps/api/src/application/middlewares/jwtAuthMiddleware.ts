@@ -14,7 +14,7 @@ export const jwtAuthMiddleware = jwt({
 });
 
 export const adminAuthMiddleware = async (c: Context, next: Next) => {
-  const { role } = c.get('jwtPayload');
+  const { role } = c.get('jwtPayload') as { role: 'admin' | 'member' };
   if (role === 'admin') {
     await next();
   } else {
@@ -23,7 +23,10 @@ export const adminAuthMiddleware = async (c: Context, next: Next) => {
 };
 
 export const userAuthMiddleware = async (c: Context, next: Next) => {
-  const { role, user_id } = c.get('jwtPayload');
+  const { role, user_id } = c.get('jwtPayload') as {
+    role: 'admin' | 'member';
+    user_id: number;
+  };
   const memberId = Number(c.req.param('member_id'));
 
   if (role === 'admin' || (role === 'member' && user_id === memberId)) {
@@ -34,7 +37,10 @@ export const userAuthMiddleware = async (c: Context, next: Next) => {
 };
 
 export const reservationAuthMiddleware = async (c: Context, next: Next) => {
-  const { role, user_id } = c.get('jwtPayload');
+  const { role, user_id } = c.get('jwtPayload') as {
+    role: 'admin' | 'member';
+    user_id: number;
+  };
   const reservationId = Number(c.req.param('reservation_id'));
 
   if (role === 'member') {
