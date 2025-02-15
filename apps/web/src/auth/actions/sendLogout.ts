@@ -9,7 +9,7 @@ export const sendLogout = async () => {
     const client = hcWithType('http://localhost:3001/');
     const rowResponce = await client.api.v1.logout.$delete({
       json: {
-        refresh_token: session.user.refreshToken,
+        refreshToken: session.user.refreshToken,
       },
     });
 

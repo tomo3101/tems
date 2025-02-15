@@ -23,11 +23,11 @@ export const getAdminsHandler: RouteHandler<typeof getAdminsRoute> = async (
 
     const response: adminsListSchema = admins.map((admin) => {
       return {
-        admin_id: admin.admin_id,
+        id: admin.admin_id,
         name: admin.name,
         email: admin.email,
-        created_at: admin.created_at.toISOString(),
-        updated_at: admin.updated_at.toISOString(),
+        createdAt: admin.created_at.toISOString(),
+        updatedAt: admin.updated_at.toISOString(),
       };
     });
 
@@ -52,18 +52,18 @@ export const getAdminsByIdHandler: RouteHandler<
 
   try {
     const adminRepository = new AdminRepository();
-    const admin = await adminRepository.findById(param.admin_id);
+    const admin = await adminRepository.findById(param.id);
 
     if (admin === undefined) {
       return c.json({ message: 'Not Found', error: 'admin not fonud' }, 404);
     }
 
     const response = {
-      admin_id: admin.admin_id,
+      id: admin.admin_id,
       name: admin.name,
       email: admin.email,
-      created_at: admin.created_at.toISOString(),
-      updated_at: admin.updated_at.toISOString(),
+      createdAt: admin.created_at.toISOString(),
+      updatedAt: admin.updated_at.toISOString(),
     };
 
     return c.json(response, 200);
@@ -91,11 +91,11 @@ export const postAdminsHandler: RouteHandler<typeof postAdminsRoute> = async (
 
     return c.json(
       {
-        admin_id: admin.admin_id,
+        id: admin.admin_id,
         name: admin.name,
         email: admin.email,
-        created_at: admin.created_at.toISOString(),
-        updated_at: admin.updated_at.toISOString(),
+        createdAt: admin.created_at.toISOString(),
+        updatedAt: admin.updated_at.toISOString(),
       },
       201,
     );
@@ -125,15 +125,15 @@ export const putAdminsHandler: RouteHandler<typeof putAdminsRoute> = async (
 
   try {
     const adminRepository = new AdminRepository();
-    const admin = await adminRepository.update(param.admin_id, body);
+    const admin = await adminRepository.update(param.id, body);
 
     return c.json(
       {
-        admin_id: admin.admin_id,
+        id: admin.admin_id,
         name: admin.name,
         email: admin.email,
-        created_at: admin.created_at.toISOString(),
-        updated_at: admin.updated_at.toISOString(),
+        createdAt: admin.created_at.toISOString(),
+        updatedAt: admin.updated_at.toISOString(),
       },
       200,
     );
@@ -162,7 +162,7 @@ export const deleteAdminsHandler: RouteHandler<
 
   try {
     const adminRepository = new AdminRepository();
-    await adminRepository.delete(param.admin_id);
+    await adminRepository.delete(param.id);
 
     return c.json({ message: 'Successful deletion' }, 200);
   } catch (e: unknown) {

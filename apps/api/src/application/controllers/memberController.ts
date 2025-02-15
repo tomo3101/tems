@@ -23,13 +23,13 @@ export const getMembersHandler: RouteHandler<typeof getMembersRoute> = async (
 
     const response: membersListSchema = members.map((member) => {
       return {
-        member_id: member.member_id,
+        id: member.member_id,
         name: member.name,
         email: member.email,
-        phone_number: member.phone_number,
-        password_hash: member.password_hash,
-        created_at: member.created_at.toISOString(),
-        updated_at: member.updated_at.toISOString(),
+        phoneNumber: member.phone_number,
+        passwordHash: member.password_hash,
+        createdAt: member.created_at.toISOString(),
+        updatedAt: member.updated_at.toISOString(),
       };
     });
 
@@ -54,7 +54,7 @@ export const getMembersByIdHandler: RouteHandler<
 
   try {
     const memberRepository = new MemberRepository();
-    const member = await memberRepository.findById(param.member_id);
+    const member = await memberRepository.findById(param.id);
 
     if (member === undefined) {
       return c.json({ message: 'Not Found', error: 'member not fonud' }, 404);
@@ -62,13 +62,13 @@ export const getMembersByIdHandler: RouteHandler<
 
     return c.json(
       {
-        member_id: member.member_id,
+        id: member.member_id,
         name: member.name,
         email: member.email,
-        phone_number: member.phone_number,
-        password_hash: member.password_hash,
-        created_at: member.created_at.toISOString(),
-        updated_at: member.updated_at.toISOString(),
+        phoneNumber: member.phone_number,
+        passwordHash: member.password_hash,
+        createdAt: member.created_at.toISOString(),
+        updatedAt: member.updated_at.toISOString(),
       },
       200,
     );
@@ -96,13 +96,13 @@ export const postMembersHandler: RouteHandler<typeof postMembersRoute> = async (
 
     return c.json(
       {
-        member_id: member.member_id,
+        id: member.member_id,
         name: member.name,
         email: member.email,
-        phone_number: member.phone_number,
-        password_hash: member.password_hash,
-        created_at: member.created_at.toISOString(),
-        updated_at: member.updated_at.toISOString(),
+        phoneNumber: member.phone_number,
+        passwordHash: member.password_hash,
+        createdAt: member.created_at.toISOString(),
+        updatedAt: member.updated_at.toISOString(),
       },
       201,
     );
@@ -138,17 +138,17 @@ export const putMembersHandler: RouteHandler<typeof putMembersRoute> = async (
 
   try {
     const memberRepository = new MemberRepository();
-    const member = await memberRepository.update(param.member_id, body);
+    const member = await memberRepository.update(param.id, body);
 
     return c.json(
       {
-        member_id: member.member_id,
+        id: member.member_id,
         name: member.name,
         email: member.email,
-        phone_number: member.phone_number,
-        password_hash: member.password_hash,
-        created_at: member.created_at.toISOString(),
-        updated_at: member.updated_at.toISOString(),
+        phoneNumber: member.phone_number,
+        passwordHash: member.password_hash,
+        createdAt: member.created_at.toISOString(),
+        updatedAt: member.updated_at.toISOString(),
       },
       200,
     );
@@ -177,7 +177,7 @@ export const deleteMembersHandler: RouteHandler<
 
   try {
     const memberRepository = new MemberRepository();
-    await memberRepository.delete(param.member_id);
+    await memberRepository.delete(param.id);
 
     return c.json({ message: 'Successful deletion' }, 200);
   } catch (e: unknown) {

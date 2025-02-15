@@ -25,16 +25,16 @@ export class MemberRepository {
       filters.push(like(members.email, query.email));
     }
 
-    if (query.phone_number) {
-      filters.push(like(members.phone_number, query.phone_number));
+    if (query.phoneNumber) {
+      filters.push(like(members.phone_number, query.phoneNumber));
     }
 
-    if (query.start_date) {
-      filters.push(gte(members.created_at, new Date(query.start_date)));
+    if (query.startDate) {
+      filters.push(gte(members.created_at, new Date(query.startDate)));
     }
 
-    if (query.end_date) {
-      filters.push(lte(members.created_at, new Date(query.end_date)));
+    if (query.endDate) {
+      filters.push(lte(members.created_at, new Date(query.endDate)));
     }
 
     return db.query.members.findMany({
@@ -69,7 +69,7 @@ export class MemberRepository {
       .values({
         name: member.name,
         email: member.email,
-        phone_number: member.phone_number,
+        phone_number: member.phoneNumber,
         password_hash: password_hash,
       })
       .$returningId();
@@ -101,7 +101,7 @@ export class MemberRepository {
       .set({
         name: member.name,
         email: member.email,
-        phone_number: member.phone_number,
+        phone_number: member.phoneNumber,
         password_hash: password_hash,
       })
       .where(eq(members.member_id, memberId));

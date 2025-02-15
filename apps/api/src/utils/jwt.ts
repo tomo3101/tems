@@ -34,7 +34,7 @@ export const createAccessToken = async (
   return {
     token: await sign(
       {
-        user_id: userId,
+        userId: userId,
         role: role,
         exp: exp,
       },
@@ -54,7 +54,7 @@ export const createRefreshToken = async (
   return {
     token: await sign(
       {
-        user_id: userId,
+        userId: userId,
         role: role,
         exp: exp,
       },
@@ -65,7 +65,7 @@ export const createRefreshToken = async (
 };
 
 interface RefreshTokenPayload extends JWTPayload {
-  user_id: number;
+  userId: number;
   role: 'admin' | 'member';
 }
 

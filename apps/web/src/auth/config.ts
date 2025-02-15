@@ -92,7 +92,7 @@ export const authConfig = {
 
           const rawResponse = await client.api.v1.refresh.$post({
             json: {
-              refresh_token: token.refreshToken,
+              refreshToken: token.refreshToken,
             },
           });
 
@@ -105,8 +105,8 @@ export const authConfig = {
 
           return {
             ...token,
-            accessToken: response.access_token,
-            accessTokenExp: response.access_token_exp,
+            accessToken: response.accessToken,
+            accessTokenExp: response.accessTokenExp,
             refreshToken: token.refreshToken,
             refreshTokenExp: token.refreshTokenExp,
           };
