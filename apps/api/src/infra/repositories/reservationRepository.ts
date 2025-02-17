@@ -7,6 +7,7 @@ import type {
   postReservationsBodySchema,
   putReservationsBodySchema,
 } from '../../application/schemas/reservationSchema.js';
+import { io } from '../../index.js';
 import { db } from '../db/helpers/connecter.js';
 import { reservations } from '../db/schemas/reservations.js';
 
@@ -190,6 +191,12 @@ export class ReservationRepository {
           })
           .where(eq(reservations.reservation_id, id));
 
+        const nowReservations = await this.findAll({
+          eventId: existsReservation.event_id,
+        });
+
+        io.emit('message', JSON.stringify(nowReservations));
+
         break;
       }
 
@@ -201,6 +208,13 @@ export class ReservationRepository {
             called_at: new Date(),
           })
           .where(eq(reservations.reservation_id, id));
+
+        const nowReservations = await this.findAll({
+          eventId: existsReservation.event_id,
+        });
+
+        io.emit('message', JSON.stringify(nowReservations));
+        io.emit('call', JSON.stringify({ reservation_id: id }));
 
         break;
       }
