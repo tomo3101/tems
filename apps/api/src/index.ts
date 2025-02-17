@@ -2,6 +2,8 @@ import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
+import type { Server as HTTPServer } from 'node:http';
+import { Server } from 'socket.io';
 import admins from './application/routes/adminRoute.js';
 import events from './application/routes/eventRoute.js';
 import login from './application/routes/loginRoute.js';
@@ -62,7 +64,22 @@ api.get('/docs/ui', swaggerUI({ url: '/api/v1/docs' }));
 const port = 3001;
 console.log(`Server is running on http://localhost:${port}`);
 
-serve({
+const server = serve({
   fetch: app.fetch,
   port,
+});
+
+export const io = new Server(server as HTTPServer, {
+  cors: {
+    origin: ['http://localhost:3000', 'https://tems-dev.ozasa.dev'],
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  console.log('id:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
 });
