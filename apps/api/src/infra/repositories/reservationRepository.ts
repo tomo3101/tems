@@ -12,6 +12,7 @@ import type {
 import { io } from '../../index.js';
 import {
   sendCalledEmail,
+  sendCallUpcomingEmail,
   sendCheckedInEmail,
   sendReservedEmail,
 } from '../../utils/resend.js';
@@ -315,6 +316,35 @@ export class ReservationRepository {
               endTime: event.end_time,
             },
           );
+        }
+
+        const upcomingReservation = nowReservations.find(
+          (reservation) =>
+            reservation.call_number === existsReservation.call_number + 2,
+        );
+
+        if (upcomingReservation) {
+          const upcomingMember = await db.query.members.findFirst({
+            where: eq(reservations.member_id, upcomingReservation.member_id),
+          });
+
+          if (upcomingMember && event) {
+            await sendCallUpcomingEmail(
+              upcomingMember.email,
+              upcomingMember.name,
+              {
+                id: upcomingReservation.reservation_id,
+                callNumber: upcomingReservation.call_number,
+                numberOfPeople: upcomingReservation.number_of_people,
+              },
+              {
+                name: event.name,
+                date: dayjs(event.date).format('YYYY-MM-DD'),
+                startTime: event.start_time,
+                endTime: event.end_time,
+              },
+            );
+          }
         }
 
         const response: reservationsWithEventListSchema = nowReservations.map(
