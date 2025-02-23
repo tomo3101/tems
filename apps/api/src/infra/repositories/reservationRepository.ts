@@ -1,5 +1,6 @@
 import { z } from '@hono/zod-openapi';
 import { createHash } from 'crypto';
+import dayjs from 'dayjs';
 import { and, count, eq, gte, lte, sum, type SQLWrapper } from 'drizzle-orm';
 import type {
   getReservationsByMemberIdQuerySchema,
@@ -9,6 +10,7 @@ import type {
   reservationsWithEventListSchema,
 } from '../../application/schemas/reservationSchema.js';
 import { io } from '../../index.js';
+import { sendCalledEmail } from '../../utils/resend.js';
 import { db } from '../db/helpers/connecter.js';
 import { reservations } from '../db/schemas/reservations.js';
 
@@ -237,6 +239,32 @@ export class ReservationRepository {
         const nowReservations = await this.findAll({
           eventId: existsReservation.event_id,
         });
+
+        const member = await db.query.members.findFirst({
+          where: eq(reservations.member_id, existsReservation.member_id),
+        });
+
+        const event = await db.query.events.findFirst({
+          where: eq(reservations.event_id, existsReservation.event_id),
+        });
+
+        if (member && event) {
+          await sendCalledEmail(
+            member.email,
+            member.name,
+            {
+              id: id,
+              callNumber: existsReservation.call_number,
+              numberOfPeople: existsReservation.number_of_people,
+            },
+            {
+              name: event.name,
+              date: dayjs(event.date).format('YYYY-MM-DD'),
+              startTime: event.start_time,
+              endTime: event.end_time,
+            },
+          );
+        }
 
         const response: reservationsWithEventListSchema = nowReservations.map(
           (reservation) => {
