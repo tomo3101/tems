@@ -9,6 +9,12 @@
         "import": "./dist/src/hc.js",
         "types": "./dist/src/hc.d.ts"
       }
+    },
+    "./schema/*": {
+      "import": {
+        "import": "./dist/src/application/schemas/*.js",
+        "types": "./dist/src/application/schemas/*.d.ts"
+      }
     }
   },
   "scripts": {
