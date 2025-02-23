@@ -1,7 +1,9 @@
 import {
   ADMIN_BASE_ROUTE,
+  ADMIN_LOGIN_REDIRECT,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
+  ERROR_BASE_ROUTE,
   ERROR_SESSION_ROUTE,
   publicRoutes,
 } from '@/auth/routes';
@@ -20,10 +22,12 @@ export const authConfig = {
   callbacks: {
     authorized: async ({ auth, request: { nextUrl } }) => {
       const isAuthenticated = !!auth?.user;
+      const isAdmin = auth?.user?.role === 'admin';
       const isError = !!auth?.error;
       const isAuthRoute = authRoutes.includes(nextUrl.pathname);
       const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
       const isAdminRoute = nextUrl.pathname.startsWith(ADMIN_BASE_ROUTE);
+      const isErrorRoute = nextUrl.pathname.startsWith(ERROR_BASE_ROUTE);
       const isErrorSessionRoute =
         nextUrl.pathname.startsWith(ERROR_SESSION_ROUTE);
 
@@ -46,6 +50,10 @@ export const authConfig = {
         }
       }
 
+      if (isErrorRoute) {
+        return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      }
+
       if (isAuthRoute) {
         if (isAuthenticated) {
           return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
@@ -55,15 +63,27 @@ export const authConfig = {
       }
 
       if (isAdminRoute) {
-        if (!isAuthenticated || auth?.user?.role !== 'admin') {
-          return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        if (!isAuthenticated || !isAdmin) {
+          return Response.redirect(
+            new URL(
+              ADMIN_LOGIN_REDIRECT +
+                `?callbackUrl=${encodeURIComponent(nextUrl.href)}`,
+              nextUrl,
+            ),
+          );
         }
 
         return true;
       }
 
-      if (!isPublicRoute && !isAuthenticated) {
-        return false;
+      if (!isPublicRoute) {
+        if (!isAuthenticated) {
+          return false;
+        }
+
+        if (isAdmin) {
+          return Response.redirect(new URL(ADMIN_BASE_ROUTE, nextUrl));
+        }
       }
 
       return true;
