@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.2.0",
     "@heroui/react": "2.6.14",
     "api": "workspace:*",
+    "dayjs": "^1.11.13",
     "framer-motion": "^12.0.5",
     "next": "^15.1.6",
     "next-auth": "5.0.0-beta.25",
