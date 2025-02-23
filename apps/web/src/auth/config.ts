@@ -2,6 +2,7 @@ import {
   ADMIN_BASE_ROUTE,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
+  ERROR_BASE_ROUTE,
   ERROR_SESSION_ROUTE,
   publicRoutes,
 } from '@/auth/routes';
@@ -24,6 +25,7 @@ export const authConfig = {
       const isAuthRoute = authRoutes.includes(nextUrl.pathname);
       const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
       const isAdminRoute = nextUrl.pathname.startsWith(ADMIN_BASE_ROUTE);
+      const isErrorRoute = nextUrl.pathname.startsWith(ERROR_BASE_ROUTE);
       const isErrorSessionRoute =
         nextUrl.pathname.startsWith(ERROR_SESSION_ROUTE);
 
@@ -44,6 +46,10 @@ export const authConfig = {
             ),
           );
         }
+      }
+
+      if (isErrorRoute) {
+        return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
       }
 
       if (isAuthRoute) {
