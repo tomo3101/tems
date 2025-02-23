@@ -10,7 +10,7 @@ import type {
   reservationsWithEventListSchema,
 } from '../../application/schemas/reservationSchema.js';
 import { io } from '../../index.js';
-import { sendCalledEmail } from '../../utils/resend.js';
+import { sendCalledEmail, sendReservedEmail } from '../../utils/resend.js';
 import { db } from '../db/helpers/connecter.js';
 import { reservations } from '../db/schemas/reservations.js';
 
@@ -167,6 +167,27 @@ export class ReservationRepository {
 
       if (createdReservation === undefined) {
         throw new Error('failed to create reservation');
+      }
+
+      const member = await tx.query.members.findFirst({
+        where: eq(reservations.member_id, memberId),
+      });
+
+      if (member) {
+        await sendReservedEmail(
+          member.email,
+          member.name,
+          {
+            id: createdReservation.reservation_id,
+            numberOfPeople: createdReservation.number_of_people,
+          },
+          {
+            name: event.name,
+            date: dayjs(event.date).format('YYYY-MM-DD'),
+            startTime: event.start_time,
+            endTime: event.end_time,
+          },
+        );
       }
 
       return createdReservation;
