@@ -111,6 +111,7 @@ export class EventRepository {
         date: event.date ? new Date(event.date) : undefined,
         start_time: event.startTime,
         end_time: event.endTime,
+        capacity: event.capacity,
       })
       .where(eq(events.event_id, id));
 
