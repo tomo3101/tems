@@ -1,5 +1,6 @@
 import { z, type RouteHandler } from '@hono/zod-openapi';
 import { ReservationRepository } from '../../infra/repositories/reservationRepository.js';
+import type { AccessTokenPayload } from '../../utils/jwt.js';
 import type {
   deleteReservationsRoute,
   getReservationsByIdRoute,
@@ -9,12 +10,8 @@ import type {
   postReservationsRoute,
   putReservationsRoute,
 } from '../routes/reservationRoute.js';
-import type {
-  reservationsListSchema,
-  reservationsWithEventListSchema,
-} from '../schemas/reservationSchema.js';
+import type { reservationsWithEventListSchema } from '../schemas/reservationSchema.js';
 
-type reservationsListSchema = z.infer<typeof reservationsListSchema>;
 type reservationsWithEventListSchema = z.infer<
   typeof reservationsWithEventListSchema
 >;
@@ -112,11 +109,11 @@ export const postReservationsHandler: RouteHandler<
   typeof postReservationsRoute
 > = async (c) => {
   const body = c.req.valid('json');
-  const { user_id } = c.get('jwtPayload') as { user_id: number };
+  const { userId } = c.get('jwtPayload') as AccessTokenPayload;
 
   try {
     const reservationRepository = new ReservationRepository();
-    const reservation = await reservationRepository.create(user_id, body);
+    const reservation = await reservationRepository.create(userId, body);
 
     return c.json(
       {

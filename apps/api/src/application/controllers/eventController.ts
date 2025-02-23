@@ -10,6 +10,7 @@ import type {
   putEventsRoute,
 } from '../routes/eventRoute.js';
 import type { eventsListSchema } from '../schemas/eventSchema.js';
+import type { AccessTokenPayload } from '../../utils/jwt.js';
 
 type eventsListSchema = z.infer<typeof eventsListSchema>;
 
@@ -97,11 +98,11 @@ export const postEventsHandler: RouteHandler<typeof postEventsRoute> = async (
   c,
 ) => {
   const body = c.req.valid('json');
-  const { user_id } = c.get('jwtPayload') as { user_id: number };
+  const { userId } = c.get('jwtPayload') as AccessTokenPayload;
 
   try {
     const eventRepository = new EventRepository();
-    const event = await eventRepository.create(user_id, body);
+    const event = await eventRepository.create(userId, body);
 
     return c.json(
       {

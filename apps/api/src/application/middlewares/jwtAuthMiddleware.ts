@@ -2,6 +2,7 @@ import 'dotenv/config';
 import type { Context, Next } from 'hono';
 import { jwt } from 'hono/jwt';
 import { ReservationRepository } from '../../infra/repositories/reservationRepository.js';
+import type { AccessTokenPayload } from '../../utils/jwt.js';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
@@ -14,7 +15,7 @@ export const jwtAuthMiddleware = jwt({
 });
 
 export const adminAuthMiddleware = async (c: Context, next: Next) => {
-  const { role } = c.get('jwtPayload') as { role: 'admin' | 'member' };
+  const { role } = c.get('jwtPayload') as AccessTokenPayload;
   if (role === 'admin') {
     await next();
   } else {
@@ -23,13 +24,10 @@ export const adminAuthMiddleware = async (c: Context, next: Next) => {
 };
 
 export const userAuthMiddleware = async (c: Context, next: Next) => {
-  const { role, user_id } = c.get('jwtPayload') as {
-    role: 'admin' | 'member';
-    user_id: number;
-  };
-  const memberId = Number(c.req.param('member_id'));
+  const { role, userId } = c.get('jwtPayload') as AccessTokenPayload;
+  const memberId = Number(c.req.param('id'));
 
-  if (role === 'admin' || (role === 'member' && user_id === memberId)) {
+  if (role === 'admin' || (role === 'member' && userId === memberId)) {
     await next();
   } else {
     return c.json({ message: 'Forbidden' }, 403);
@@ -37,17 +35,14 @@ export const userAuthMiddleware = async (c: Context, next: Next) => {
 };
 
 export const reservationAuthMiddleware = async (c: Context, next: Next) => {
-  const { role, user_id } = c.get('jwtPayload') as {
-    role: 'admin' | 'member';
-    user_id: number;
-  };
-  const reservationId = Number(c.req.param('reservation_id'));
+  const { role, userId } = c.get('jwtPayload') as AccessTokenPayload;
+  const reservationId = Number(c.req.param('id'));
 
   if (role === 'member') {
     const reservationRepository = new ReservationRepository();
     const reservation = await reservationRepository.findById(reservationId);
 
-    if (reservation?.member_id !== user_id) {
+    if (reservation?.member_id !== userId) {
       return c.json({ message: 'Forbidden' }, 403);
     }
   }
