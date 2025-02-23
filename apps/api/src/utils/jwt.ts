@@ -62,7 +62,12 @@ export const createRefreshToken = async (
   };
 };
 
-interface RefreshTokenPayload extends JWTPayload {
+export interface AccessTokenPayload extends JWTPayload {
+  userId: number;
+  role: 'admin' | 'member';
+}
+
+export interface RefreshTokenPayload extends JWTPayload {
   userId: number;
   role: 'admin' | 'member';
 }
