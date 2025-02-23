@@ -6,6 +6,7 @@ import type {
   getReservationsQuerySchema,
   postReservationsBodySchema,
   putReservationsBodySchema,
+  reservationsWithEventListSchema,
 } from '../../application/schemas/reservationSchema.js';
 import { io } from '../../index.js';
 import { db } from '../db/helpers/connecter.js';
@@ -16,6 +17,9 @@ type postReservationsBodySchema = z.infer<typeof postReservationsBodySchema>;
 type putReservationsBodySchema = z.infer<typeof putReservationsBodySchema>;
 type getReservationsByMemberIdQuerySchema = z.infer<
   typeof getReservationsByMemberIdQuerySchema
+>;
+type reservationsWithEventListSchema = z.infer<
+  typeof reservationsWithEventListSchema
 >;
 
 export class ReservationRepository {
@@ -195,7 +199,28 @@ export class ReservationRepository {
           eventId: existsReservation.event_id,
         });
 
-        io.emit('message', JSON.stringify(nowReservations));
+        const response: reservationsWithEventListSchema = nowReservations.map(
+          (reservation) => {
+            return {
+              id: reservation.reservation_id,
+              eventId: reservation.event_id,
+              eventName: reservation.events.name,
+              eventDate: reservation.events.date.toISOString(),
+              eventStartTime: reservation.events.start_time,
+              eventEndTime: reservation.events.end_time,
+              memberId: reservation.member_id,
+              numberOfPeople: reservation.number_of_people,
+              qrCodeHash: reservation.qr_code_hash,
+              callNumber: reservation.call_number,
+              status: reservation.status,
+              createdAt: reservation.created_at.toISOString(),
+              checkedInAt: reservation.checked_in_at?.toISOString(),
+              calledAt: reservation.called_at?.toISOString(),
+            };
+          },
+        );
+
+        io.emit('message', JSON.stringify(response));
 
         break;
       }
@@ -213,8 +238,68 @@ export class ReservationRepository {
           eventId: existsReservation.event_id,
         });
 
-        io.emit('message', JSON.stringify(nowReservations));
-        io.emit('call', JSON.stringify({ reservation_id: id }));
+        const response: reservationsWithEventListSchema = nowReservations.map(
+          (reservation) => {
+            return {
+              id: reservation.reservation_id,
+              eventId: reservation.event_id,
+              eventName: reservation.events.name,
+              eventDate: reservation.events.date.toISOString(),
+              eventStartTime: reservation.events.start_time,
+              eventEndTime: reservation.events.end_time,
+              memberId: reservation.member_id,
+              numberOfPeople: reservation.number_of_people,
+              qrCodeHash: reservation.qr_code_hash,
+              callNumber: reservation.call_number,
+              status: reservation.status,
+              createdAt: reservation.created_at.toISOString(),
+              checkedInAt: reservation.checked_in_at?.toISOString(),
+              calledAt: reservation.called_at?.toISOString(),
+            };
+          },
+        );
+
+        io.emit('message', JSON.stringify(response));
+        io.emit('call', JSON.stringify({ reservationId: id }));
+
+        break;
+      }
+
+      case 'done': {
+        await db
+          .update(reservations)
+          .set({
+            status: reservation.status,
+            checked_in_at: new Date(),
+          })
+          .where(eq(reservations.reservation_id, id));
+
+        const nowReservations = await this.findAll({
+          eventId: existsReservation.event_id,
+        });
+
+        const response: reservationsWithEventListSchema = nowReservations.map(
+          (reservation) => {
+            return {
+              id: reservation.reservation_id,
+              eventId: reservation.event_id,
+              eventName: reservation.events.name,
+              eventDate: reservation.events.date.toISOString(),
+              eventStartTime: reservation.events.start_time,
+              eventEndTime: reservation.events.end_time,
+              memberId: reservation.member_id,
+              numberOfPeople: reservation.number_of_people,
+              qrCodeHash: reservation.qr_code_hash,
+              callNumber: reservation.call_number,
+              status: reservation.status,
+              createdAt: reservation.created_at.toISOString(),
+              checkedInAt: reservation.checked_in_at?.toISOString(),
+              calledAt: reservation.called_at?.toISOString(),
+            };
+          },
+        );
+
+        io.emit('message', JSON.stringify(response));
 
         break;
       }
