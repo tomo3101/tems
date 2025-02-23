@@ -78,7 +78,7 @@ export const getReservationsQuerySchema = z.object({
     example: '3e282f3fab90aef740a6e4baabda7567ab8bba63b9dad310953746d7992a9cde',
   }),
   status: z
-    .enum(['reserved', 'checked_in', 'cancelled', 'called'])
+    .enum(['reserved', 'checked_in', 'cancelled', 'called', 'done'])
     .optional()
     .openapi({ example: 'reserved' }),
   startTime: z.string().date().optional().openapi({ example: '2022-01-01' }),
@@ -98,7 +98,7 @@ export const getReservationsByMemberIdQuerySchema = z.object({
     .optional()
     .openapi({ example: '1' }),
   status: z
-    .enum(['reserved', 'checked_in', 'cancelled', 'called'])
+    .enum(['reserved', 'checked_in', 'cancelled', 'called', 'done'])
     .optional()
     .openapi({ example: 'reserved' }),
   startTime: z.string().date().optional().openapi({ example: '2022-01-01' }),
@@ -125,7 +125,7 @@ export const putReservationsBodySchema = z.object({
     .optional()
     .openapi({ example: 1 }),
   status: z
-    .enum(['reserved', 'checked_in', 'cancelled', 'called'])
+    .enum(['reserved', 'checked_in', 'cancelled', 'called', 'done'])
     .optional()
     .openapi({ example: 'reserved' }),
 });
