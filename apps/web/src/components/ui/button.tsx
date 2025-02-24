@@ -55,3 +55,19 @@ export const MyReservationsButton = (props: ButtonProps) => {
     </Button>
   );
 };
+
+export const MyAccountSettingsButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/mypage/account">
+      <p className="text-lg">アカウント情報</p>
+    </Button>
+  );
+};
+
+export const MyPasswordSettingsButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/mypage/password">
+      <p className="text-lg">パスワード変更</p>
+    </Button>
+  );
+};
