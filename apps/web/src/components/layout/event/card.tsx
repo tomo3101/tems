@@ -1,6 +1,9 @@
 'use server';
 
-import { EventAvailabilityTable } from '@/components/ui/table';
+import {
+  EventAvailabilityTable,
+  EventWaitingStatusTable,
+} from '@/components/ui/table';
 import { Card } from '@heroui/card';
 import { hcWithType } from 'api/hc';
 import dayjs from 'dayjs';
@@ -53,6 +56,54 @@ export const EventAvailabilityCard = async ({
             <EventAvailabilityTable events={events} />
           </Card>
         ))}
+    </div>
+  );
+};
+
+export const EventWaitingStatusCard = async () => {
+  const client = hcWithType('http://localhost:3001');
+
+  const rowEventsResponce = await client.api.v1.events.$get({
+    query: {},
+  });
+
+  const rowReservationsResponce = await client.api.v1.reservations.$get({
+    query: {},
+  });
+
+  if (!rowEventsResponce.ok || !rowReservationsResponce.ok) {
+    return (
+      <h2 className="text-center text-2xl font-medium">
+        体験運転スケジュールの取得に失敗しました
+      </h2>
+    );
+  }
+
+  const events = await rowEventsResponce.json();
+  const groupedEvents = Object.groupBy(events, ({ date }) => date);
+
+  const reservations = await rowReservationsResponce.json();
+
+  if (Object.keys(groupedEvents).length === 0) {
+    return (
+      <h2 className="text-center text-2xl font-medium">
+        次回の体験運転スケジュールは未定です
+      </h2>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-xl flex flex-col mx-auto gap-4">
+      {Object.entries(groupedEvents).map(([date, events]) => (
+        <Card className="flex flex-col gap-4 p-4" shadow="sm" key={date}>
+          <h3 className="text-2xl mx-auto">{date}</h3>
+
+          <EventWaitingStatusTable
+            events={events}
+            reservations={reservations}
+          />
+        </Card>
+      ))}
     </div>
   );
 };
