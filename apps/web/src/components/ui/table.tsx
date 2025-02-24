@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@heroui/table';
 import Link from 'next/link';
-import { Key } from 'react';
+import { Key, useMemo } from 'react';
 
 interface ReservationTableProps {
   selectCallNumber?: number;
@@ -263,6 +263,109 @@ export const EventWaitingStatusTable = ({
       <TableBody emptyContent="イベントはありません" items={events}>
         {(item) => (
           <TableRow key={item.id}>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+};
+
+interface AdminCallReservationTableProps {
+  reservations: ReservationWithEvent[];
+  renderCell: (item: ReservationWithEvent, columnKey: Key) => React.ReactNode;
+}
+
+export const AdminCallReservationTable = ({
+  reservations,
+  renderCell,
+}: AdminCallReservationTableProps) => {
+  const columns = [
+    {
+      key: 'callNumber',
+      label: '受付番号',
+    },
+    {
+      key: 'numberOfPeople',
+      label: '人数',
+    },
+    {
+      key: 'call',
+      label: '呼出',
+    },
+  ];
+
+  const checkedInReservations = useMemo(() => {
+    return reservations.filter(
+      (reservation) => reservation.status === 'checked_in',
+    );
+  }, [reservations]);
+
+  return (
+    <Table
+      aria-label="Admin Call Reservation Table"
+      removeWrapper
+      isHeaderSticky
+    >
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      </TableHeader>
+      <TableBody
+        items={checkedInReservations}
+        emptyContent="順番待ちはありません"
+      >
+        {(item) => (
+          <TableRow key={item.callNumber}>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+};
+
+interface AdminCalledReservationTableProps {
+  reservations: ReservationWithEvent[];
+  renderCell: (item: ReservationWithEvent, columnKey: Key) => React.ReactNode;
+}
+
+export const AdminCalledReservationTable = ({
+  reservations,
+  renderCell,
+}: AdminCalledReservationTableProps) => {
+  const columns = [
+    {
+      key: 'callNumber',
+      label: '受付番号',
+    },
+    {
+      key: 'complete',
+      label: '完了',
+    },
+  ];
+
+  const calledReservations = useMemo(() => {
+    return reservations.filter(
+      (reservation) => reservation.status === 'called',
+    );
+  }, [reservations]);
+
+  return (
+    <Table
+      aria-label="Admin Called Reservation Table"
+      removeWrapper
+      isHeaderSticky
+    >
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      </TableHeader>
+      <TableBody items={calledReservations} emptyContent="呼出はありません">
+        {(item) => (
+          <TableRow key={item.callNumber}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
