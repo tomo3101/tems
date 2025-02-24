@@ -59,7 +59,7 @@ export const MyReservationsButton = (props: ButtonProps) => {
 export const MyAccountSettingsButton = (props: ButtonProps) => {
   return (
     <Button {...props} as={Link} href="/mypage/account">
-      <p className="text-lg">アカウント情報</p>
+      <p className="text-lg">アカウント設定</p>
     </Button>
   );
 };
@@ -68,6 +68,62 @@ export const MyPasswordSettingsButton = (props: ButtonProps) => {
   return (
     <Button {...props} as={Link} href="/mypage/password">
       <p className="text-lg">パスワード変更</p>
+    </Button>
+  );
+};
+
+export const AdminPageButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/admin">
+      <p className="text-lg">管理者ページ</p>
+    </Button>
+  );
+};
+
+export const AdminAccountButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/admin/account">
+      <p className="text-lg">管理アカウント設定</p>
+    </Button>
+  );
+};
+
+export const AdminPasswordSettingsButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/admin/password">
+      <p className="text-lg">パスワード変更</p>
+    </Button>
+  );
+};
+
+export const DashboardAdminButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/admin/dashboard/admin">
+      <p className="text-lg">管理者一覧</p>
+    </Button>
+  );
+};
+
+export const DashBoardMemberButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/admin/dashboard/member">
+      <p className="text-lg">会員一覧</p>
+    </Button>
+  );
+};
+
+export const DashBoardEventButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/admin/dashboard/event">
+      <p className="text-lg">イベント一覧</p>
+    </Button>
+  );
+};
+
+export const DashBoardReservationButton = (props: ButtonProps) => {
+  return (
+    <Button {...props} as={Link} href="/admin/dashboard/reservation">
+      <p className="text-lg">予約一覧</p>
     </Button>
   );
 };
