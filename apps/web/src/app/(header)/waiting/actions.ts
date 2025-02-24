@@ -1,14 +1,9 @@
 'use server';
 
-import { auth } from '@/auth';
-import { hcWithAuth } from '@/utils/hc';
+import { hcWithType } from 'api/hc';
 
 export const fetchReservations = async (eventId: string) => {
-  const session = await auth();
-
-  if (!session) return;
-
-  const client = hcWithAuth(session.user.accessToken);
+  const client = hcWithType('http://localhost:3001/');
   const rowResponse = await client.api.v1.reservations.$get({
     query: {
       eventId: eventId,
@@ -21,11 +16,7 @@ export const fetchReservations = async (eventId: string) => {
 };
 
 export const fetchEvent = async (eventId: string) => {
-  const session = await auth();
-
-  if (!session) return;
-
-  const client = hcWithAuth(session.user.accessToken);
+  const client = hcWithType('http://localhost:3001/');
   const rowResponse = await client.api.v1.events[':id'].$get({
     param: {
       id: eventId,
