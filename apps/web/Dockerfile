@@ -18,6 +18,7 @@ WORKDIR /app
 RUN pnpm add -g turbo
 COPY . .
 RUN turbo prune web --docker
+COPY ./apps/web/.env /app/out/full/apps/web/.env
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer

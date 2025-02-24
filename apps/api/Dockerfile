@@ -18,6 +18,7 @@ WORKDIR /app
 RUN pnpm add -g turbo
 COPY . .
 RUN turbo prune api --docker
+COPY ./apps/api/.env /app/out/full/apps/api/.env
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -52,6 +53,7 @@ COPY --from=installer --chown=hono:nodejs /app/node_modules ./node_modules
 COPY --from=installer --chown=hono:nodejs /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=installer --chown=hono:nodejs /app/apps/api/dist ./apps/api/dist
 COPY --from=installer --chown=hono:nodejs /app/apps/api/package.json ./apps/api/package.json
+COPY --from=installer --chown=hono:nodejs /app/apps/api/.env ./.env
 
 USER hono
 
