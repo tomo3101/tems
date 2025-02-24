@@ -8,8 +8,22 @@ import {
 } from 'api/schema/reservationSchema';
 import { z } from 'zod';
 
+const API_URL = process.env.API_URL;
+
+if (!API_URL) {
+  throw new Error('API_URL is undefined');
+}
+
+export const hc = hcWithType(API_URL, {
+  fetch: (input: RequestInfo | URL, requestInit?: RequestInit) =>
+    fetch(input, {
+      cache: 'no-cache',
+      ...requestInit,
+    }),
+});
+
 export const hcWithAuth = (accessToken: string) => {
-  return hcWithType('http://localhost:3001/', {
+  return hcWithType(API_URL, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

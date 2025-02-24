@@ -1,16 +1,10 @@
 import { EventAvailabilityCard } from '@/components/layout/event/card';
+import { hc } from '@/utils/hc';
 import { Card, CardBody, CardHeader } from '@heroui/card';
-import { hcWithType } from 'api/hc';
 import dayjs from 'dayjs';
 
 export default async function EventStatusPage() {
-  const client = hcWithType('http://localhost:3001', {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) =>
-      fetch(input, {
-        cache: 'no-cache',
-        ...requestInit,
-      }),
-  });
+  const client = hc;
 
   const rowResponce = await client.api.v1.events.$get({
     query: {

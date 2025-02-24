@@ -1,7 +1,7 @@
 import { authConfig } from '@/auth/config';
-import { hcWithType } from 'api/hc';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { hc } from './utils/hc';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -13,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         role: { label: 'Role', type: 'role' },
       },
       authorize: async (credentials) => {
-        const client = hcWithType('http://localhost:3001/');
+        const client = hc;
 
         if (!credentials) {
           return null;

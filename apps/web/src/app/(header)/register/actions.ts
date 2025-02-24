@@ -1,6 +1,6 @@
 'use server';
 
-import { hcWithType } from 'api/hc';
+import { hc } from '@/utils/hc';
 
 interface RegisterFormState {
   status?: 'success' | 'error';
@@ -17,7 +17,7 @@ export const sendRegister = async (
   _state: RegisterFormState,
   form: FormData,
 ) => {
-  const client = hcWithType('http://localhost:3001/');
+  const client = hc;
 
   const name = form.get('name');
   const email = form.get('email');

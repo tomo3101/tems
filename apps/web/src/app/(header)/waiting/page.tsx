@@ -1,15 +1,9 @@
 import { EventWaitingStatusCard } from '@/components/layout/event/card';
+import { hc } from '@/utils/hc';
 import { Card, CardBody, CardHeader } from '@heroui/card';
-import { hcWithType } from 'api/hc';
 
 export default async function WaitingPage() {
-  const client = hcWithType('http://localhost:3001', {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) =>
-      fetch(input, {
-        cache: 'no-cache',
-        ...requestInit,
-      }),
-  });
+  const client = hc;
 
   const rowEventsResponce = await client.api.v1.events.$get({
     query: {},
