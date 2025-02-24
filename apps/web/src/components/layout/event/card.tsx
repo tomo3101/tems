@@ -1,7 +1,7 @@
 'use server';
 
 import { EventAvailabilityTable } from '@/components/ui/table';
-import { Card, CardBody, CardHeader } from '@heroui/card';
+import { Card } from '@heroui/card';
 import { hcWithType } from 'api/hc';
 import dayjs from 'dayjs';
 
@@ -22,13 +22,9 @@ export const EventAvailabilityCard = async ({
 
   if (!rowResponce.ok) {
     return (
-      <Card>
-        <CardHeader className="flex items-center">
-          <h2 className="text-3xl font-medium">
-            体験運転スケジュールの取得に失敗しました
-          </h2>
-        </CardHeader>
-      </Card>
+      <h2 className="text-center text-2xl font-medium">
+        体験運転スケジュールの取得に失敗しました
+      </h2>
     );
   }
 
@@ -37,14 +33,9 @@ export const EventAvailabilityCard = async ({
 
   if (Object.keys(groupedEvents).length === 0) {
     return (
-      <Card>
-        <CardHeader className="flex justify-center">
-          <h2 className="text-3xl font-medium">次回の体験運転スケジュール</h2>
-        </CardHeader>
-        <CardBody className="flex justify-center items-center">
-          <p className="text-2xl">次回の体験運転スケジュールは未定です</p>
-        </CardBody>
-      </Card>
+      <h2 className="text-center text-2xl font-medium">
+        次回の体験運転スケジュールは未定です
+      </h2>
     );
   }
 
