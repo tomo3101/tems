@@ -6,6 +6,7 @@ import {
   ERROR_BASE_ROUTE,
   ERROR_SESSION_ROUTE,
   publicRoutes,
+  WAITING_BASE_ROUTE,
 } from '@/auth/routes';
 import { hcWithType } from 'api/hc';
 import { NextAuthConfig } from 'next-auth';
@@ -26,6 +27,7 @@ export const authConfig = {
       const isError = !!auth?.error;
       const isAuthRoute = authRoutes.includes(nextUrl.pathname);
       const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+      const isWaitingRoute = nextUrl.pathname.startsWith(WAITING_BASE_ROUTE);
       const isAdminRoute = nextUrl.pathname.startsWith(ADMIN_BASE_ROUTE);
       const isErrorRoute = nextUrl.pathname.startsWith(ERROR_BASE_ROUTE);
       const isErrorSessionRoute =
@@ -76,7 +78,7 @@ export const authConfig = {
         return true;
       }
 
-      if (!isPublicRoute) {
+      if (!isPublicRoute && !isWaitingRoute) {
         if (!isAuthenticated) {
           return false;
         }

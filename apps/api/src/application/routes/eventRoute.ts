@@ -87,8 +87,6 @@ export const getEventsByIdRoute = createRoute({
   request: {
     params: eventIdParamsSchema,
   },
-  security: [{ JWT: [] }],
-  middleware: [jwtAuthMiddleware] as const,
   responses: {
     200: {
       description: 'Success',
