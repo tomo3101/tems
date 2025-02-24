@@ -24,7 +24,7 @@ export default function LoginPage() {
     <>
       <Card className="w-full max-w-sm mx-4">
         <CardHeader className="flex justify-center">
-          <h2 className="text-2xl">ログイン</h2>
+          <h2 className="text-2xl font-medium">ログイン</h2>
         </CardHeader>
         <CardBody>
           <Suspense>
