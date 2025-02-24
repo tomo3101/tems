@@ -8,7 +8,7 @@ import {
   publicRoutes,
   WAITING_BASE_ROUTE,
 } from '@/auth/routes';
-import { hcWithType } from 'api/hc';
+import { hc } from '@/utils/hc';
 import { NextAuthConfig } from 'next-auth';
 
 export const authConfig = {
@@ -110,7 +110,7 @@ export const authConfig = {
         if (!token.refreshToken) throw new TypeError('Missing refresh_token');
 
         try {
-          const client = hcWithType('http://localhost:3001/');
+          const client = hc;
 
           const rawResponse = await client.api.v1.refresh.$post({
             json: {

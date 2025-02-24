@@ -1,9 +1,9 @@
 'use server';
 
-import { hcWithType } from 'api/hc';
+import { hc } from '@/utils/hc';
 
 export const fetchReservations = async (eventId: string) => {
-  const client = hcWithType('http://localhost:3001/');
+  const client = hc;
   const rowResponse = await client.api.v1.reservations.$get({
     query: {
       eventId: eventId,
@@ -16,7 +16,7 @@ export const fetchReservations = async (eventId: string) => {
 };
 
 export const fetchEvent = async (eventId: string) => {
-  const client = hcWithType('http://localhost:3001/');
+  const client = hc;
   const rowResponse = await client.api.v1.events[':id'].$get({
     param: {
       id: eventId,

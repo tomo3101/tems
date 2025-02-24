@@ -3,20 +3,14 @@ import { EventAvailabilityCard } from '@/components/layout/event/card';
 import { MyReservationsButton, NewReserveButton } from '@/components/ui/button';
 import { UsageNotesCard } from '@/components/ui/card';
 import { SplideTop } from '@/components/ui/splide';
+import { hc } from '@/utils/hc';
 import { Card, CardBody, CardHeader } from '@heroui/card';
-import { hcWithType } from 'api/hc';
 import dayjs from 'dayjs';
 
 export default async function HomePage() {
   const session = await auth();
 
-  const client = hcWithType('http://localhost:3001', {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) =>
-      fetch(input, {
-        cache: 'no-cache',
-        ...requestInit,
-      }),
-  });
+  const client = hc;
 
   const rowResponce = await client.api.v1.events.$get({
     query: {
