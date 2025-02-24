@@ -59,7 +59,7 @@ export const MyReservationsButton = (props: ButtonProps) => {
 export const MyAccountSettingsButton = (props: ButtonProps) => {
   return (
     <Button {...props} as={Link} href="/mypage/account">
-      <p className="text-lg">アカウント情報</p>
+      <p className="text-lg">アカウント設定</p>
     </Button>
   );
 };
