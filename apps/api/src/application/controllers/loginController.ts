@@ -1,5 +1,5 @@
 import type { RouteHandler } from '@hono/zod-openapi';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { AdminRepository } from '../../infra/repositories/adminRepository.js';
 import { MemberRepository } from '../../infra/repositories/memberRepository.js';
 import { TokenRepository } from '../../infra/repositories/tokenRepository.js';
@@ -77,10 +77,7 @@ export const postLoginHandler: RouteHandler<
         );
       }
 
-      const isPasswordMatch = await compare(
-        body.password,
-        admin.password_hash.replace(/^\$2y\$/, '$2a$'),
-      );
+      const isPasswordMatch = await compare(body.password, admin.password_hash);
 
       if (!isPasswordMatch) {
         return c.json(

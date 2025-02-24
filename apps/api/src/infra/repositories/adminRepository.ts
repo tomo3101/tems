@@ -1,5 +1,5 @@
 import type { z } from '@hono/zod-openapi';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { and, eq, gte, like, lte, type SQLWrapper } from 'drizzle-orm';
 import type {
   getAdminsQuerySchema,

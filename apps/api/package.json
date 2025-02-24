@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.3",
