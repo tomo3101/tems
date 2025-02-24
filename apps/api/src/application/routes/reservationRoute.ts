@@ -42,8 +42,6 @@ export const getReservationsRoute = createRoute({
   request: {
     query: getReservationsQuerySchema,
   },
-  middleware: [jwtAuthMiddleware] as const,
-  security: [{ JWT: [] }],
   responses: {
     200: {
       description: 'Success',
