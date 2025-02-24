@@ -37,14 +37,16 @@ export default async function Home() {
 
   return (
     <>
-      <h1 className="text-4xl">新規予約</h1>
+      <h1 className="text-center text-4xl font-medium">新規予約</h1>
 
       <Card className="w-full p-4">
-        <CardHeader>
-          <h2 className="text-2xl mx-auto">体験運転スケジュール</h2>
+        <CardHeader className="flex justify-center">
+          <h2 className="text-3xl font-medium">体験運転スケジュール</h2>
         </CardHeader>
         <CardBody>
-          <p>スケジュールの取得に失敗しました。</p>
+          <p className="text-center text-2xl">
+            スケジュールの取得に失敗しました。
+          </p>
         </CardBody>
       </Card>
     </>
