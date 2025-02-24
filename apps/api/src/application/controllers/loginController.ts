@@ -77,7 +77,10 @@ export const postLoginHandler: RouteHandler<
         );
       }
 
-      const isPasswordMatch = await compare(body.password, admin.password_hash);
+      const isPasswordMatch = await compare(
+        body.password,
+        admin.password_hash.replace(/^\$2y\$/, '$2a$'),
+      );
 
       if (!isPasswordMatch) {
         return c.json(
