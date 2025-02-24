@@ -1,6 +1,6 @@
 'use client';
 
-import { logOut } from '@/auth/logout';
+import { sendLogout } from '@/auth/actions/sendLogout';
 import { LoginButton, RegisterButton } from '@/components/ui/button';
 import { useCurrentSession } from '@/hook/useCurrentSession';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
@@ -189,14 +189,14 @@ const adminMenuItems = [
         href: '/admin/dashboard/reservation',
       },
       {
-        key: 'admin/dashboard/admin',
-        label: '管理者',
-        href: '/admin/dashboard/admin',
-      },
-      {
         key: 'admin/dashboard/member',
         label: '会員',
         href: '/admin/dashboard/member',
+      },
+      {
+        key: 'admin/dashboard/admin',
+        label: '管理者',
+        href: '/admin/dashboard/admin',
       },
     ],
   },
@@ -317,7 +317,7 @@ const NavigationLoginMenu = () => {
     {
       key: 'logout',
       label: 'ログアウト',
-      onPress: () => logOut(),
+      onPress: () => sendLogout(),
     },
   ];
 
@@ -349,7 +349,7 @@ const NavigationLoginMenu = () => {
     {
       key: 'logout',
       label: 'ログアウト',
-      onPress: () => logOut(),
+      onPress: () => sendLogout(),
     },
   ];
 
