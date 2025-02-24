@@ -27,7 +27,7 @@ export const getReservaionWithQr = async (qrCodeHash: string) => {
         };
       }
 
-      if (reservation.status === 'called') {
+      if (reservation.status === 'called' || reservation.status === 'done') {
         return {
           status: 'エラー',
           message: '呼出済みです。',
