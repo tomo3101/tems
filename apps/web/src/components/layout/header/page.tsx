@@ -1,6 +1,7 @@
 'use client';
 
 import { sendLogout } from '@/auth/actions/sendLogout';
+import { DEFAULT_LOGIN_REDIRECT } from '@/auth/routes';
 import { LoginButton, RegisterButton } from '@/components/ui/button';
 import { useCurrentSession } from '@/hook/useCurrentSession';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
@@ -317,7 +318,10 @@ const NavigationLoginMenu = () => {
     {
       key: 'logout',
       label: 'ログアウト',
-      onPress: () => sendLogout(),
+      onPress: async () => {
+        await sendLogout();
+        window.location.replace(DEFAULT_LOGIN_REDIRECT);
+      },
     },
   ];
 
@@ -349,7 +353,10 @@ const NavigationLoginMenu = () => {
     {
       key: 'logout',
       label: 'ログアウト',
-      onPress: () => sendLogout(),
+      onPress: async () => {
+        await sendLogout();
+        window.location.replace(DEFAULT_LOGIN_REDIRECT);
+      },
     },
   ];
 
