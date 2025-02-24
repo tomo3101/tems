@@ -1,37 +1,19 @@
-'use server';
-
 import {
   EventAvailabilityTable,
   EventWaitingStatusTable,
 } from '@/components/ui/table';
+import { Event, ReservationWithEvent } from '@/utils/hc';
 import { Card } from '@heroui/card';
-import { hcWithType } from 'api/hc';
-import dayjs from 'dayjs';
 
 interface EventAvailabilityCardProps {
   showNextOnly?: boolean;
+  events: Event[];
 }
 
-export const EventAvailabilityCard = async ({
+export const EventAvailabilityCard = ({
   showNextOnly = false,
+  events,
 }: EventAvailabilityCardProps) => {
-  const client = hcWithType('http://localhost:3001');
-
-  const rowResponce = await client.api.v1.events.$get({
-    query: {
-      startDate: dayjs().format('YYYY-MM-DD'),
-    },
-  });
-
-  if (!rowResponce.ok) {
-    return (
-      <h2 className="text-center text-2xl font-medium">
-        体験運転スケジュールの取得に失敗しました
-      </h2>
-    );
-  }
-
-  const events = await rowResponce.json();
   const groupedEvents = Object.groupBy(events, ({ date }) => date);
 
   if (Object.keys(groupedEvents).length === 0) {
@@ -60,29 +42,16 @@ export const EventAvailabilityCard = async ({
   );
 };
 
-export const EventWaitingStatusCard = async () => {
-  const client = hcWithType('http://localhost:3001');
+interface EventWaitingStatusCardProps {
+  events: Event[];
+  reservations: ReservationWithEvent[];
+}
 
-  const rowEventsResponce = await client.api.v1.events.$get({
-    query: {},
-  });
-
-  const rowReservationsResponce = await client.api.v1.reservations.$get({
-    query: {},
-  });
-
-  if (!rowEventsResponce.ok || !rowReservationsResponce.ok) {
-    return (
-      <h2 className="text-center text-2xl font-medium">
-        体験運転スケジュールの取得に失敗しました
-      </h2>
-    );
-  }
-
-  const events = await rowEventsResponce.json();
+export const EventWaitingStatusCard = ({
+  events,
+  reservations,
+}: EventWaitingStatusCardProps) => {
   const groupedEvents = Object.groupBy(events, ({ date }) => date);
-
-  const reservations = await rowReservationsResponce.json();
 
   if (Object.keys(groupedEvents).length === 0) {
     return (

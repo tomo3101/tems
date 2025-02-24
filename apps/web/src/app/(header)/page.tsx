@@ -4,9 +4,25 @@ import { MyReservationsButton, NewReserveButton } from '@/components/ui/button';
 import { UsageNotesCard } from '@/components/ui/card';
 import { SplideTop } from '@/components/ui/splide';
 import { Card, CardBody, CardHeader } from '@heroui/card';
+import { hcWithType } from 'api/hc';
+import dayjs from 'dayjs';
 
 export default async function HomePage() {
   const session = await auth();
+
+  const client = hcWithType('http://localhost:3001', {
+    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) =>
+      fetch(input, {
+        cache: 'no-cache',
+        ...requestInit,
+      }),
+  });
+
+  const rowResponce = await client.api.v1.events.$get({
+    query: {
+      startDate: dayjs().format('YYYY-MM-DD'),
+    },
+  });
 
   return (
     <div className="w-full min-h-main flex justify-center">
@@ -41,7 +57,16 @@ export default async function HomePage() {
             </h2>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
-            <EventAvailabilityCard showNextOnly />
+            {rowResponce.ok ? (
+              <EventAvailabilityCard
+                showNextOnly
+                events={await rowResponce.json()}
+              />
+            ) : (
+              <h2 className="text-center text-2xl font-medium">
+                体験運転スケジュールの取得に失敗しました
+              </h2>
+            )}
           </CardBody>
         </Card>
 
