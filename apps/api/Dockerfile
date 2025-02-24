@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 # The web Dockerfile is copy-pasted into our main docs at /docs/handbook/deploying-with-docker.
 # Make sure you update this Dockerfile, the Dockerfile in the web workspace and copy that over to Dockerfile in the docs.
@@ -6,6 +6,7 @@ FROM node:20-alpine AS base
 # Enable pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g corepack@latest
 RUN corepack enable
 
 FROM base AS builder
@@ -26,7 +27,7 @@ WORKDIR /app
 
 # First install dependencies (as they change less often)
 COPY --from=builder /app/out/json/ .
-RUN pnpm install
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
