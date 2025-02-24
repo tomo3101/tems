@@ -47,9 +47,9 @@ export const CallUpcomingTemplate: FC<Readonly<CalledTemplateProps>> = ({
         TEMSの「順番待ち状況」画面で現在の順番待ち状況をご確認いただけます。
         <br />
         <a
-          href={`https://tems-dev.ozasa.dev/wating/reservation/${reservation.id}`}
+          href={`https://tems-dev.ozasa.dev/waiting/reservation/${reservation.id}`}
         >
-          https://tems-dev.ozasa.dev/wating/reservation/{reservation.id}
+          https://tems-dev.ozasa.dev/waiting/reservation/{reservation.id}
         </a>
       </p>
     </div>
@@ -115,9 +115,9 @@ export const CalledTemplate: FC<Readonly<CalledTemplateProps>> = ({
         TEMSの「順番待ち状況」画面で現在の順番待ち状況をご確認いただけます。
         <br />
         <a
-          href={`https://tems-dev.ozasa.dev/wating/reservation/${reservation.id}`}
+          href={`https://tems-dev.ozasa.dev/waiting/reservation/${reservation.id}`}
         >
-          https://tems-dev.ozasa.dev/wating/reservation/{reservation.id}
+          https://tems-dev.ozasa.dev/waiting/reservation/{reservation.id}
         </a>
       </p>
     </div>
