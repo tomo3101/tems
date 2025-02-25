@@ -15,7 +15,7 @@ export default async function NewsPostsListPage() {
       <h1 className="text-2xl font-medium">お知らせ一覧</h1>
       <div className="flex flex-col gap-4">
         {posts.map((post) => (
-          <Card as={NextLink} key={post.id} href={`/blog/${post.id}`}>
+          <Card as={NextLink} key={post.id} href={`/news/${post.id}`}>
             <CardBody>
               <div className="sm:flex sm:justify-between gap-8">
                 <div className="sm:w-2/5">
