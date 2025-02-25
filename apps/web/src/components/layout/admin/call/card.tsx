@@ -159,10 +159,16 @@ export const CallCard = ({
   return (
     <>
       <h2 className="text-2xl">
-        <span className="text-4xl font-medium">
-          {lastDoneReservation?.callNumber}番
-        </span>
-        まで呼出済み
+        {lastDoneReservation ? (
+          <>
+            <span className="text-4xl font-medium">
+              {lastDoneReservation?.callNumber}番
+            </span>
+            まで呼出済み
+          </>
+        ) : (
+          <>呼出済みはありません</>
+        )}
       </h2>
 
       <div className="flex gap-4">
