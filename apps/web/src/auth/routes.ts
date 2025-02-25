@@ -1,5 +1,7 @@
-export const publicRoutes = ['/', '/blog', '/news', '/status'];
+export const publicRoutes = ['/', '/status'];
 export const authRoutes = ['/login', '/login/admin', '/register'];
+export const BLOG_BASE_ROUTE = '/blog';
+export const NEWS_BASE_ROUTE = '/news';
 export const WAITING_BASE_ROUTE = '/waiting';
 export const ADMIN_BASE_ROUTE = '/admin';
 export const ERROR_BASE_ROUTE = '/error';
