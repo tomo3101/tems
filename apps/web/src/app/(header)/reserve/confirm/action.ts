@@ -6,7 +6,7 @@ import { hcWithAuth } from '@/utils/hc';
 
 export const sendReservation = async (data: ReservationData) => {
   const session = await auth();
-  if (!session) return false;
+  if (!session) return { success: false };
 
   const client = hcWithAuth(session.user.accessToken);
 
@@ -17,5 +17,16 @@ export const sendReservation = async (data: ReservationData) => {
     },
   });
 
-  return rowResponce.ok;
+  if (!rowResponce.ok) {
+    const json = await rowResponce.json();
+
+    return {
+      success: false,
+      error: json.error,
+    };
+  }
+
+  return {
+    success: true,
+  };
 };
