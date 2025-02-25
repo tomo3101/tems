@@ -10,7 +10,12 @@ import type {
   reservationsWithEventListSchema,
 } from '../../application/schemas/reservationSchema.js';
 import { io } from '../../index.js';
-import { sendCalledEmail } from '../../utils/resend.js';
+import {
+  sendCalledEmail,
+  sendCallUpcomingEmail,
+  sendCheckedInEmail,
+  sendReservedEmail,
+} from '../../utils/resend.js';
 import { db } from '../db/helpers/connecter.js';
 import { reservations } from '../db/schemas/reservations.js';
 
@@ -169,6 +174,27 @@ export class ReservationRepository {
         throw new Error('failed to create reservation');
       }
 
+      const member = await tx.query.members.findFirst({
+        where: eq(reservations.member_id, memberId),
+      });
+
+      if (member) {
+        await sendReservedEmail(
+          member.email,
+          member.name,
+          {
+            id: createdReservation.reservation_id,
+            numberOfPeople: createdReservation.number_of_people,
+          },
+          {
+            name: event.name,
+            date: dayjs(event.date).format('YYYY-MM-DD'),
+            startTime: event.start_time,
+            endTime: event.end_time,
+          },
+        );
+      }
+
       return createdReservation;
     });
   }
@@ -200,6 +226,32 @@ export class ReservationRepository {
         const nowReservations = await this.findAll({
           eventId: existsReservation.event_id,
         });
+
+        const member = await db.query.members.findFirst({
+          where: eq(reservations.member_id, existsReservation.member_id),
+        });
+
+        const event = await db.query.events.findFirst({
+          where: eq(reservations.event_id, existsReservation.event_id),
+        });
+
+        if (member && event) {
+          await sendCheckedInEmail(
+            member.email,
+            member.name,
+            {
+              id: id,
+              callNumber: existsReservation.call_number,
+              numberOfPeople: existsReservation.number_of_people,
+            },
+            {
+              name: event.name,
+              date: dayjs(event.date).format('YYYY-MM-DD'),
+              startTime: event.start_time,
+              endTime: event.end_time,
+            },
+          );
+        }
 
         const response: reservationsWithEventListSchema = nowReservations.map(
           (reservation) => {
@@ -264,6 +316,35 @@ export class ReservationRepository {
               endTime: event.end_time,
             },
           );
+        }
+
+        const upcomingReservation = nowReservations.find(
+          (reservation) =>
+            reservation.call_number === existsReservation.call_number + 2,
+        );
+
+        if (upcomingReservation) {
+          const upcomingMember = await db.query.members.findFirst({
+            where: eq(reservations.member_id, upcomingReservation.member_id),
+          });
+
+          if (upcomingMember && event) {
+            await sendCallUpcomingEmail(
+              upcomingMember.email,
+              upcomingMember.name,
+              {
+                id: upcomingReservation.reservation_id,
+                callNumber: upcomingReservation.call_number,
+                numberOfPeople: upcomingReservation.number_of_people,
+              },
+              {
+                name: event.name,
+                date: dayjs(event.date).format('YYYY-MM-DD'),
+                startTime: event.start_time,
+                endTime: event.end_time,
+              },
+            );
+          }
         }
 
         const response: reservationsWithEventListSchema = nowReservations.map(
