@@ -58,8 +58,8 @@ export const ReservedTemplate: FC<Readonly<ReservedTemplateProps>> = ({
       <p>
         ※鉄道模型イーナクラブ TEMSの「予約確認」画面でもご確認いただけます。
         <br />
-        <a href="https://tems-dev.ozasa.dev/mypage/reservation">
-          https://tems-dev.ozasa.dev/mypage/reservation
+        <a href="https://tems.ozasa.dev/mypage/reservation">
+          https://tems.ozasa.dev/mypage/reservation
         </a>
       </p>
       <p>※このメールアドレスは送信専用です。</p>

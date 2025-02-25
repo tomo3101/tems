@@ -47,9 +47,9 @@ export const CallUpcomingTemplate: FC<Readonly<CalledTemplateProps>> = ({
         TEMSの「順番待ち状況」画面で現在の順番待ち状況をご確認いただけます。
         <br />
         <a
-          href={`https://tems-dev.ozasa.dev/waiting/reservation/${reservation.id}`}
+          href={`https://tems.ozasa.dev/waiting/reservation/${reservation.id}`}
         >
-          https://tems-dev.ozasa.dev/waiting/reservation/{reservation.id}
+          https://tems.ozasa.dev/waiting/reservation/{reservation.id}
         </a>
       </p>
     </div>
@@ -76,8 +76,8 @@ export const CallUpcomingTemplate: FC<Readonly<CalledTemplateProps>> = ({
       <p>
         ※鉄道模型イーナクラブ TEMSの「予約確認」画面でもご確認いただけます。
         <br />
-        <a href="https://tems-dev.ozasa.dev/mypage/reservation">
-          https://tems-dev.ozasa.dev/mypage/reservation
+        <a href="https://tems.ozasa.dev/mypage/reservation">
+          https://tems.ozasa.dev/mypage/reservation
         </a>
       </p>
       <p>※このメールアドレスは送信専用です。</p>
@@ -115,9 +115,9 @@ export const CalledTemplate: FC<Readonly<CalledTemplateProps>> = ({
         TEMSの「順番待ち状況」画面で現在の順番待ち状況をご確認いただけます。
         <br />
         <a
-          href={`https://tems-dev.ozasa.dev/waiting/reservation/${reservation.id}`}
+          href={`https://tems.ozasa.dev/waiting/reservation/${reservation.id}`}
         >
-          https://tems-dev.ozasa.dev/waiting/reservation/{reservation.id}
+          https://tems.ozasa.dev/waiting/reservation/{reservation.id}
         </a>
       </p>
     </div>
@@ -144,8 +144,8 @@ export const CalledTemplate: FC<Readonly<CalledTemplateProps>> = ({
       <p>
         ※鉄道模型イーナクラブ TEMSの「予約確認」画面でもご確認いただけます。
         <br />
-        <a href="https://tems-dev.ozasa.dev/mypage/reservation">
-          https://tems-dev.ozasa.dev/mypage/reservation
+        <a href="https://tems.ozasa.dev/mypage/reservation">
+          https://tems.ozasa.dev/mypage/reservation
         </a>
       </p>
       <p>※このメールアドレスは送信専用です。</p>

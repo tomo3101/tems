@@ -24,7 +24,7 @@ export default async function HomePage() {
         <SplideTop />
 
         {session?.user && session.user.role == 'member' ? (
-          <div className="md:hidden w-full flex justify-between items-center gap-4 mx-auto h-16">
+          <div className="w-full max-w-md flex justify-between items-center gap-4 mx-auto h-16">
             <NewReserveButton
               variant="solid"
               color="primary"
