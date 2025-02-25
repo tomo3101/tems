@@ -14,7 +14,7 @@ on:
           - debug
   push:
     branches:
-      - 'develop'
+      - 'main'
 
 jobs:
   ssh_command:
@@ -31,4 +31,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           service_token_id: ${{ secrets.SERVICE_TOKEN_ID }}
           service_token_secret: ${{ secrets.SERVICE_TOKEN_SECRET }}
-          commands: pwd
+          commands: |
+            cd /home/tems/apps/tems-platform/node/projects/tems
+            git pull origin
+            cd /home/tems/apps/tems-platform
+            docker compose up -d --build
