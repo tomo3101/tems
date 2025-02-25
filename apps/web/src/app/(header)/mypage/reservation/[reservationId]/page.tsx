@@ -1,6 +1,7 @@
 'use server';
 
 import { auth } from '@/auth';
+import { CheckinButtonModal } from '@/components/layout/mypage/reservation/button';
 import { StatusChip } from '@/components/ui/chip';
 import { hcWithAuth } from '@/utils/hc';
 import { Card } from '@heroui/card';
@@ -70,15 +71,19 @@ export default async function ReservationDetailPage({
         </div>
 
         {reservation.status === 'reserved' && (
-          <div className="flex items-center justify-center">
-            <Card className="w-full max-w-[350px] flex items-center justify-center">
-              <QRCodeSVG
-                value={reservation.qrCodeHash}
-                level="M"
-                marginSize={4}
-                style={{ width: '100%', height: '100%' }}
-              />
-            </Card>
+          <div className="flex flex-col gap-8">
+            <div className="flex items-center justify-center">
+              <Card className="w-full max-w-[350px] flex items-center justify-center">
+                <QRCodeSVG
+                  value={reservation.qrCodeHash}
+                  level="M"
+                  marginSize={4}
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </Card>
+            </div>
+
+            <CheckinButtonModal reservationId={parseInt(reservationId)} />
           </div>
         )}
 
