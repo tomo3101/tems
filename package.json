@@ -1,0 +1,28 @@
+{
+  "name": "node-with-docker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "clean": "git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "push": "turbo run push",
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "lefthook": "^1.11.0",
+    "prettier": "^3.5.2",
+    "turbo": "^2.4.2"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": "use pnpm",
+    "yarn": "use pnpm",
+    "pnpm": ">=9.15.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "remove-dist": {
+      "cache": false
+    },
+    "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "public/dist/**"],
+      "dependsOn": ["remove-dist", "^build"],
+      "env": ["NEXT_PUBLIC_API_HOST"]
+    },
+    "start": {
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "push": {
+      "cache": false,
+      "dependsOn": ["api#build"]
+    }
+  }
+}
