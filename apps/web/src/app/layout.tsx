@@ -4,7 +4,7 @@ import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: 'TEMS',
-  description: 'Train Event Management System',
+  description: 'Train model Event Management System',
   formatDetection: { telephone: false, address: false, email: false },
 };
 
