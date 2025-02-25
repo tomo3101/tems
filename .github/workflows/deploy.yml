@@ -1,0 +1,21 @@
+name: Deploy to Proxmon VM
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        required: true
+        description: Log level
+        default: warning
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
+
+jobs:
+  ssh_command:
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: ""
