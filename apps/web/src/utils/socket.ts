@@ -2,6 +2,12 @@
 
 import { io } from 'socket.io-client';
 
-export const socket = io('https://tems-dev-ws.ozasa.dev', {
+const NEXT_PUBLIC_WS_URL = process.env.NEXT_PUBLIC_WS_URL;
+
+if (!NEXT_PUBLIC_WS_URL) {
+  throw new Error('WS_URL is undefined');
+}
+
+export const socket = io(NEXT_PUBLIC_WS_URL, {
   autoConnect: false,
 });
