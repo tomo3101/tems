@@ -18,6 +18,14 @@ export const ReservationListCard = ({
 }: ReservationListCardProps) => {
   return (
     <div className="w-full flex flex-col gap-8">
+      {reservations.length === 0 && (
+        <Card>
+          <h2 className="text-center text-2xl font-medium p-4">
+            予約はありません
+          </h2>
+        </Card>
+      )}
+
       {reservations.map((reservation) => (
         <ReservationCard key={reservation.id} reservation={reservation} />
       ))}
