@@ -2,9 +2,11 @@ import {
   ADMIN_BASE_ROUTE,
   ADMIN_LOGIN_REDIRECT,
   authRoutes,
+  BLOG_BASE_ROUTE,
   DEFAULT_LOGIN_REDIRECT,
   ERROR_BASE_ROUTE,
   ERROR_SESSION_ROUTE,
+  NEWS_BASE_ROUTE,
   publicRoutes,
   WAITING_BASE_ROUTE,
 } from '@/auth/routes';
@@ -27,6 +29,8 @@ export const authConfig = {
       const isError = !!auth?.error;
       const isAuthRoute = authRoutes.includes(nextUrl.pathname);
       const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+      const isBlogRoute = nextUrl.pathname.startsWith(BLOG_BASE_ROUTE);
+      const isNewsRoute = nextUrl.pathname.startsWith(NEWS_BASE_ROUTE);
       const isWaitingRoute = nextUrl.pathname.startsWith(WAITING_BASE_ROUTE);
       const isAdminRoute = nextUrl.pathname.startsWith(ADMIN_BASE_ROUTE);
       const isErrorRoute = nextUrl.pathname.startsWith(ERROR_BASE_ROUTE);
@@ -78,7 +82,7 @@ export const authConfig = {
         return true;
       }
 
-      if (!isPublicRoute && !isWaitingRoute) {
+      if (!isPublicRoute && !isWaitingRoute && !isBlogRoute && !isNewsRoute) {
         if (!isAuthenticated) {
           return false;
         }
