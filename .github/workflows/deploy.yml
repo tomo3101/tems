@@ -14,7 +14,7 @@ on:
         - debug
   push:
     branches:
-      - 'dev'
+      - 'develop'
 
 jobs:
   ssh_command:
