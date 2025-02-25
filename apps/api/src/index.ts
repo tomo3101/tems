@@ -71,7 +71,11 @@ const server = serve({
 
 export const io = new Server(server as HTTPServer, {
   cors: {
-    origin: ['http://localhost:3000', 'https://tems-dev.ozasa.dev'],
+    origin: [
+      'http://localhost:3000',
+      'https://tems.ozasa.dev',
+      'https://tems-dev.ozasa.dev',
+    ],
   },
 });
 
