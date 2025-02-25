@@ -38,7 +38,9 @@ export default async function BlogPostsDetailPage({
         </CardHeader>
 
         <CardBody>
-          <div className="prose dark:prose-invert">{parse(post.content)}</div>
+          <div className="max-w-full prose dark:prose-invert">
+            {parse(post.content)}
+          </div>
         </CardBody>
       </Card>
     </>
