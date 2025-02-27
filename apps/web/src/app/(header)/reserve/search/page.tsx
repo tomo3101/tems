@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { EventListCard } from '@/components/layout/reserve/search/card';
 import { hcWithAuth } from '@/utils/hc';
 import { Card, CardBody, CardHeader } from '@heroui/card';
+import dayjs from 'dayjs';
 
 export default async function Home() {
   const session = await auth();
@@ -13,7 +14,9 @@ export default async function Home() {
 
   const client = hcWithAuth(session.user.accessToken);
   const rowResponce = await client.api.v1.events.$get({
-    query: {},
+    query: {
+      startDate: dayjs().format('YYYY-MM-DD'),
+    },
   });
 
   if (rowResponce.ok) {

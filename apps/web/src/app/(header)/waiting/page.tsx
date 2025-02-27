@@ -1,12 +1,15 @@
 import { EventWaitingStatusCard } from '@/components/layout/event/card';
 import { hc } from '@/utils/hc';
 import { Card, CardBody, CardHeader } from '@heroui/card';
+import dayjs from 'dayjs';
 
 export default async function WaitingPage() {
   const client = hc;
 
   const rowEventsResponce = await client.api.v1.events.$get({
-    query: {},
+    query: {
+      startDate: dayjs().format('YYYY-MM-DD'),
+    },
   });
 
   const rowReservationsResponce = await client.api.v1.reservations.$get({
