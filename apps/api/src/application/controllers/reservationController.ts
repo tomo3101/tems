@@ -187,14 +187,6 @@ export const putReservationsHandler: RouteHandler<
       return c.json({ message: 'Not Found', error: e.message }, 404);
     }
 
-    if (
-      e instanceof Error &&
-      (e.message === 'reservation is checked in' ||
-        e.message === 'reservation is cancelled')
-    ) {
-      return c.json({ message: 'Bad Request', error: e.message }, 400);
-    }
-
     return c.json(
       {
         message: 'Internal Server Error',
