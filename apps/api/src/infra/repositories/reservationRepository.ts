@@ -292,7 +292,6 @@ export class ReservationRepository {
           .update(reservations)
           .set({
             status: reservation.status,
-            checked_in_at: new Date(),
           })
           .where(eq(reservations.reservation_id, id));
 
