@@ -16,6 +16,10 @@ on:
     types:
       - deploy
 
+concurrency:
+  group: webhook_deploy
+  cancel-in-progress: true
+
 jobs:
   ssh_command:
     name: Run SSH command
