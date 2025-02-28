@@ -180,12 +180,6 @@ export class ReservationRepository {
       throw new Error('reservation not found');
     }
 
-    if (existsReservation.status === 'cancelled') {
-      throw new Error('reservation is cancelled');
-    } else if (existsReservation.status === reservation.status) {
-      throw new Error('status is same');
-    }
-
     // ステータスをチェックインに更新する場合、ckecked_in_atを更新
     switch (reservation.status) {
       case 'checked_in': {
