@@ -1,6 +1,6 @@
 {
   "name": "node-with-docker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -14,9 +14,9 @@
     "prepare": "lefthook install"
   },
   "devDependencies": {
-    "lefthook": "^1.11.0",
-    "prettier": "^3.5.2",
-    "turbo": "^2.4.2"
+    "lefthook": "^1.11.3",
+    "prettier": "^3.5.3",
+    "turbo": "^2.4.4"
   },
   "engines": {
     "node": ">=14.0.0",
